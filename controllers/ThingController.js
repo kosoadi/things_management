@@ -12,31 +12,37 @@ var Product = mongoose.model("../models/Product");
 var User = mongoose.model("../models/User");
 var ObjectId = mongoose.Types.ObjectId;
 
-// method to create/register developer
+// method to create/register thing
+/*
+	param: USERID
+	body:
+	{
+		name: String,
+		location: String,
+		endpoint: String,
+		token: String,
+		prodid: ObjectId of Product
+	}
+*/
 exports.registerThing = function(req,res,next){
 	var new_thing = new Thing({
 		_owner: req.params.USERID,
 		name: req.body.name,
 		location: req.body.location,
-		endpoint: req.body.endpoint
+		endpoint: req.body.endpoint,
+		token: req.body.token
 	});
 
 	// TO DO validate TOKEN
-	new_thing.token = req.body.endpoint; 
 
 	Product
-	.findOne({ _name: req.body.type})
-	.populate('_creator')
-	.populate('category')
-	.exec(function(err, prod){
+	.findOne({ _id: req.body.prodid}, function(err, prod){
 		if(err){
 			res.send("Product/Type does not exist");
 			throw err;
 		}
-		new_thing.category = category._name;
-		new_thing._product = _creator._id;
-		new_thing.type = req.body.type;
-		new_thing = validateTypeCategory(new_thing._product);
+		new_thing._product = prod._id;
+		new_thing.validateTypeCategory(new_thing._product);
 	});
 		
     new_thing.save(function(err){
@@ -62,6 +68,11 @@ exports.registerThing = function(req,res,next){
     next();
 }
 
+// method to get a thing of a user
+/*
+	param: USERID, THINGID
+	body: no
+*/
 exports.getUserThing = function(req, res, next){
 	Thing.findOne({_owner: req.params.USERID, _id:req.params.THINGID}, function(err, thing){
 		if(err){
@@ -73,6 +84,11 @@ exports.getUserThing = function(req, res, next){
 	next();	
 }
 
+// method to get all things of a user
+/*
+	param: USERID
+	body: no
+*/
 exports.getAllUserThing = function(req, res, next){
 	Thing.find({_owner: req.params.USERID}, function(err, things){
 		if(err){
@@ -84,6 +100,11 @@ exports.getAllUserThing = function(req, res, next){
 	next();	
 }
 
+// method to get all things
+/*
+	param: no
+	body: no
+*/
 exports.getAllThing = function(req, res, next){
 	Thing.find({}, function(err, things) {
 		if (err){ 
@@ -95,6 +116,18 @@ exports.getAllThing = function(req, res, next){
 	next();	
 }
 
+// method to edit a user's thing
+/*
+	param: USERID, THINGID
+	body:
+	{
+		_product: ObjectId,
+		name: String,
+		location: String,
+		endpoint: String,
+		token: String
+	}
+*/
 exports.editThing = function(req, res, next){
 	Thing.findOneAndUpdate({_owner: req.params.USERID, _id:req.params.THINGID}, req.body,
 		function(err, thing) {
@@ -108,6 +141,11 @@ exports.editThing = function(req, res, next){
 	next();	
 }
 
+// method to delete a user's thing
+/*
+	param: USERID, THINGID
+	body: no
+*/
 exports.deleteThing = function(req, res, next){
 	Thing.findOneAndRemove({_owner: req.params.USERID, _id:req.params.THINGID},
 		function(err, thing) {

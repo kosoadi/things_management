@@ -76,31 +76,28 @@ server.get('/sot/developer/:DEVID', controllers.DeveloperController.getDeveloper
 server.put('/sot/developer/:DEVID', controllers.DeveloperController.editDeveloper);
 server.del('/sot/developer/:DEVID', controllers.DeveloperController.deleteDeveloper);
 
+server.post('/sot/developer/:DEVID/product/register', controllers.ProductController.registerProduct);
+server.get('/sot/product', controllers.ProductController.getAllProduct);
+server.get('/sot/developer/:DEVID/product', controllers.ProductController.getAllDeveloperProduct);
+server.get('/sot/developer/:DEVID/product/:PRODID', controllers.ProductController.getDeveloperProduct);
+server.put('/sot/developer/:DEVID/product/:PRODID', controllers.ProductController.editProduct);
+server.del('/sot/developer/:DEVID/product/:PRODID', controllers.ProductController.deleteProduct);
+server.put('/sot/developer/:DEVID/product/:PRODID/property', controllers.ProductController.addProductProperty);
+server.del('/sot/developer/:DEVID/product/:PRODID/property', controllers.ProductController.deleteProductProperty);
 
+server.post('/sot/user/:USERID/thing/register', controllers.ThingController.registerThing);
+server.get('/sot/thing', controllers.ThingController.getAllthing);
+server.get('/sot/user/:USERID/thing', controllers.ThingController.getAllUserThing);
+server.get('/sot/user/:USERID/thing/:THINGID', controllers.ThingController.getUserThing);
+server.put('/sot/user/:USERID/thing/:THINGID', controllers.ThingController.editThing);
+server.del('/sot/user/:USERID/thing/:THINGID', controllers.ThingController.deleteThing);
 
-server.post('/sot/thing/register/:USERID', registerThing); // register User-owned thing
-server.post('/sot/user/register', registerUser); // register user
-server.post('/sot/developer/register', registerDeveloper); // register developer
-server.post('/sot/product/register/:DEVID', registerProduct); // register developer product
-server.post('/sot/user/:USERID/thing/:THINGID/register', registerThingProperty); // register a property
-server.post('/sot/category/register', registerCategory); // register a category
-
-server.get('/sot/thing/all', getAllThing);
-server.get('/sot/user/all', getAllUser);
-server.get('/sot/developer/all', getAllDeveloper);
-server.get('/sot/product/all', getAllProduct);
-server.get('/sot/product/:PRODUCTID/property', getProductProperty); // get product's properties
-server.get('/sot/user/:USERID/thing', getUserThing); // get all things of a user
-server.get('/sot/user/:USERID/thing/:THINGID', getThingProperty); // get all properties of a thing
-server.get('/sot/developer/:DEVID/product', getDeveloperProduct); // get all products of a developer
-server.get('/sot/property/all', getAllProperty); // get all shared properties
-server.get('/sot/category/all', getAllCategory); // get all category
-// server.get('/sot/token/all'); // get all things' tokens
-// server.get('/sot/token/:THINGID'); // get thing's token
-
-// server.get('/5ba6207/user/:USERID/thing/:THINGID/:PROPNAME', getPropertyValue);
-// server.put('/5ba6207/user/:USERID/thing/:THINGID/:PROPNAME', setPropertyValue);
-server.put('/sot/product/:PRODUCTID/property', addProductProperty); // get product's properties
+server.post('/sot/user/:USERID/thing/:THINGID/property/register', controllers.PropertyController.registerProperty);
+server.get('/sot/property', controllers.PropertyController.);
+server.get('/sot/user/:USERID/thing/:THINGID/property', controllers.PropertyController.);
+server.get('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.);
+server.put('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.);
+server.del('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.);
 
 server.listen(4242, function () {
   console.log('%s listening at %s', server.name, server.url);

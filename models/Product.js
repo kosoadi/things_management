@@ -14,7 +14,6 @@ var productSchema = new Schema({
 });
 
 productSchema.method.checkPropertyValidity = function(prop){
-	var arr_type = ["STR","NUM", "BOOL", "ARR", "OBJ", "BUFF"]
 	for(var p in prop){
 		var valType = prop[p].hasOwnProperty('valueType');
 		
@@ -36,7 +35,7 @@ productSchema.method.addProperty = function(prop){
 		return false;
 	} 
 	if((typeof prop.name==="string") && (typeof prop.access==="boolean") 
-		&& (typeof prop.controll==="boolean") && (typeof prop.description==="string")){		
+		&& (typeof prop.control==="boolean") && (typeof prop.description==="string")){		
 		for(var i in this.properties){
 			if(this.properties[i].name.toUppperCase() === prop.name.toUppperCase()){
 				return false;

@@ -13,11 +13,18 @@ var Product = mongoose.model("../models/Product");
 var User = mongoose.model("../models/User");
 var ObjectId = mongoose.Types.ObjectId;
 
-// method to create/register developer
+// method to create/register a property
+/*
+	param: USERID, THINGID
+	body:
+	{
+		properties: [Object JSON]
+	}
+*/
 exports.registerProperty = function(req,res,next){
 	var userid = req.params.USERID;
 	var thingid = req.params.THINGID;
-	var properties = JSON.parse(req.body);
+	var properties = JSON.parse(req.body.properties);
 
 	Thing.findOne({_owner: userid, _id:thingid}, function(err, thing){
 		if (err){ 
@@ -55,6 +62,14 @@ exports.registerProperty = function(req,res,next){
 	next();
 }
 
+// method to get user properties
+/*
+	param: USERID, THINGID
+	body:
+	{
+		properties: [Object JSON]
+	}
+*/
 exports.getUserProperty = function(req, res, next){
 	Thing.findOne({_owner: req.params.USERID, _id:req.params.THINGID}, function(err, thing){
 		if(err){
