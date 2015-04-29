@@ -48,7 +48,7 @@ exports.registerProduct = function(req,res,next){
     next();
 }
 
-exports.getProduct = function(req, res, next){
+exports.getAllDeveloperProduct = function(req, res, next){
 	Product.find({_creator: req.params.DEVID}, function(err, prods){
 		if(err){
 			res.send(err);

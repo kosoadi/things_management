@@ -23,14 +23,6 @@ var thingSchema = new Schema({
 	properties: [{type: Schema.Types.ObjectId, ref: 'Property'}]
 });
 
-// 	category: {type: Schema.Types.category, ref:'Product'},
-
-/*
-thingSchema.plugin(autoIncrement.plugin,{
-	model: 'Thing',
-	field: 'thingid'
-});
-*/
 thingSchema.index({_owner: 1, _id: 1}, {unique: true});
 
 thingSchema.method.validateTypeCategory = function (productId){

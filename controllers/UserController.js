@@ -9,7 +9,15 @@ var mongoose = require('mongoose');
 var Developer = mongoose.model("../models/User");
 var ObjectId = mongoose.Types.ObjectId;
 
-
+// method to register a user
+/*
+	param: no
+	body:
+	{
+		username: String,
+		name: String
+	}
+*/
 exports.registerUser = function(req,res,next){
 	var new_user = new User({
 		_username: req.body.username,
@@ -27,6 +35,11 @@ exports.registerUser = function(req,res,next){
 	next();
 }
 
+// method to get a user
+/*
+	param: USERID
+	body: no
+*/
 exports.getUser = function(req, res, next){
 	User.findById(req.params.USERID, function(err, user) {
 		if (err){ 
@@ -38,6 +51,11 @@ exports.getUser = function(req, res, next){
 	next();	
 }
 
+// method to get all users
+/*
+	param: no
+	body: no
+*/
 exports.getAllUser = function(req, res, next){
 	User.find({}, function(err, users) {
 		if (err){ 
@@ -61,6 +79,17 @@ exports.removeUser = function(req, res, next){
 	next();	
 }
 
+// method to edit a user
+/*
+	param: USERID
+	body:
+	{
+		_username: String,
+		name: String,
+		password: String,
+		image: String,
+	}
+*/
 exports.editUser = function(req, res, next){
 	User.findOneAndUpdate( {_id:req.params.USERID}, req.body,
 		function(err, user) {
@@ -73,6 +102,11 @@ exports.editUser = function(req, res, next){
 	next();	
 }
 
+// method to delete a user
+/*
+	param: USERID
+	body: no
+*/
 exports.deleteUser = function(req, res, next){
 	User.findOneAndRemove( {_id:req.params.USERID},
 		function(err, user) {
