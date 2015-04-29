@@ -1,0 +1,20 @@
+No.	Method		URL										Descriptions
+1	POST		/5ba6207/:USERID					Register Things
+2	POST		/5ba6207/user/register					Register User
+3	POST		/5ba6207/developer/register				Register Developer
+4	POST		/5ba6207/product/register/:DEVID		Register Product
+5	POST		/5ba6207/:USERID/:THINGID		Register ONE Thing's Property
+6	POST		/5ba6207/category/register				Register Category
+7	GET			/5ba6207/thing/all						Get All Things
+8	GET 		/5ba6207/user/all						Get All Users
+9	GET 		/5ba6207/developer/all					Get All Developers
+10	GET 		/5ba6207/product/all					Get All Product
+11	GET 		/5ba6207/:USERID					Get User's Things
+12	GET 		/5ba6207/:USERID/:THINGID			Get Thing's Properties
+13	GET 		/5ba6207/developer/:DEVID				Get Developer's Products
+14	GET 		/5ba6207/property/all					Get All Properties
+15	GET 		/5ba6207/category/all					Get All Category
+16	GET 		/5ba6207/token/all						Get All Token
+17	GET 		/5ba6207/token/:THINGID					Get Thing's Token
+18	GET 		/5ba6207/:USERID/:THINGID/:PROPNAME		Get Property's value
+19	PUT			/5ba6207/:USERID/:THINGID/:PROPNAME		Change Property's state
