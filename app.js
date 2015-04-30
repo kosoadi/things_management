@@ -8,15 +8,15 @@ var restify = require('restify');
 var mongoose = require('mongoose');
 var fs = require('fs');
 require('./db');
-///*
+
+/*
 var User = require('./models/User');
 var Developer = require('./models/Developer');
 var Product = require('./models/Product');
 var Thing = require('./models/Thing');
 var Property = require('./models/Property');
 var Category = require('./models/Category');
-var Token = require('./models/Token');
-//*/
+*/
 
 var controllers = {}
 	, controllers_path = process.cwd() + '/controllers' 
@@ -35,6 +35,7 @@ server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
 
+/*
 function getPropertyValue(req, res, next){
 	var userid = req.params.USERID;
 	var thingid = req.params.THINGID;
@@ -56,13 +57,14 @@ function getPropertyValue(req, res, next){
 		});
 	});
 }
+*/
 
-server.post('/sot/category/register', controllers.CategoryController.registerController);
+server.post('/sot/category/register', controllers.CategoryController.registerCategory);
 server.get('/sot/category', controllers.CategoryController.getAllCategory);
 server.put('/sot/category', controllers.CategoryController.editCategory);
 server.del('/sot/category', controllers.CategoryController.deleteCategory);
-server.get('/sot/category/product', controllers.CategoryController.getAllProductByCategory);
-server.get('/sot/category/thing', controllers.CategoryController.getAllThingByCategory);
+server.get('/sot/category/:CATID/product', controllers.CategoryController.getAllProductByCategory);
+server.get('/sot/category/:CATID/thing', controllers.CategoryController.getAllThingByCategory);
 
 server.post('/sot/user/register', controllers.UserController.registerUser);
 server.get('/sot/user', controllers.UserController.getAllUser);
@@ -86,7 +88,7 @@ server.put('/sot/developer/:DEVID/product/:PRODID/property', controllers.Product
 server.del('/sot/developer/:DEVID/product/:PRODID/property', controllers.ProductController.deleteProductProperty);
 
 server.post('/sot/user/:USERID/thing/register', controllers.ThingController.registerThing);
-server.get('/sot/thing', controllers.ThingController.getAllthing);
+server.get('/sot/thing', controllers.ThingController.getAllThing);
 server.get('/sot/user/:USERID/thing', controllers.ThingController.getAllUserThing);
 server.get('/sot/user/:USERID/thing/:THINGID', controllers.ThingController.getUserThing);
 server.put('/sot/user/:USERID/thing/:THINGID', controllers.ThingController.editThing);

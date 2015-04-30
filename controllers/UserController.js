@@ -6,10 +6,10 @@
 */
 
 var mongoose = require('mongoose');
-var Developer = mongoose.model("../models/User");
+var User = require("../models/User");
 var ObjectId = mongoose.Types.ObjectId;
 
-// method to register a user
+// method to regUserserrequire
 /*
 	param: no
 	body:

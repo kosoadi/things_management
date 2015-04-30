@@ -5,12 +5,12 @@
 */
 
 var mongoose = require('mongoose');
-var Property = mongoose.model("../models/Property");
-var Thing = mongoose.model("../models/Thing");
-var Category = mongoose.model("../models/Category");
-var Developer = mongoose.model("../models/Developer");
-var Product = mongoose.model("../models/Product");
-var User = mongoose.model("../models/User");
+var Property = require("../models/Property");
+var Thing = require("../models/Thing");
+var Category = require("../models/Category");
+var Developer = require("../models/Developer");
+var Product = require("../models/Product");
+var User = require("../models/User");
 var ObjectId = mongoose.Types.ObjectId;
 
 // method to create/register a property

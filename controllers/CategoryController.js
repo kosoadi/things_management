@@ -5,8 +5,7 @@
 */
 
 var mongoose = require('mongoose');
-var Category = mongoose.model("../models/Category");
-var 
+var Category = require("../models/Category");
 var ObjectId = mongoose.Types.ObjectId;
 
 // method to create/register new category
@@ -23,7 +22,7 @@ exports.registerCategory = function(req,res,next){
 		_name: req.body.name
 	});
 	
-	if(typeof req.params.image === "undefined"){
+	if(typeof req.body.image === "undefined"){
 		new_category.image = "SET DEFAULT IMAGE URI"
 	}else new_category.image = req.body.image;
 
@@ -96,14 +95,10 @@ exports.deleteCategory = function(req, res, next){
 
 // method to get all products by a category
 /*
-	param: no
-	body:
-	{
-		name: String
-	}
+	param: CATID
 */
 exports.getAllProductByCategory = function(req, res, next){
-	Category.findOne({_name: req.body.name}, function(err, cat){
+	Category.findOne({_id: req.params.CATID}, function(err, cat){
 		if(err){
 			res.send(err);
 			throw err;
@@ -121,14 +116,10 @@ exports.getAllProductByCategory = function(req, res, next){
 
 // method to get all things by a category
 /*
-	param: no
-	body:
-	{
-		name: String
-	}
+	param: CATID
 */
 exports.getAllThingByCategory = function(req, res, next){
-	Category.findOne({_name: req.body.name}, function(err, cat){
+	Category.findOne({_id: req.params.CATID}, function(err, cat){
 		if(err){
 			res.send(err);
 			throw err;

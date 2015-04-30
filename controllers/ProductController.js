@@ -5,9 +5,9 @@
 */
 
 var mongoose = require('mongoose');
-var Product = mongoose.model("../models/Product");
-var Developer = mongoose.model("../models/Developer");
-var Category = mongoose.model("../models/Category");
+var Product = require("../models/Product");
+var Developer = require("../models/Developer");
+var Category = require("../models/Category");
 var ObjectId = mongoose.Types.ObjectId;
 
 // method to create/register developer
@@ -31,7 +31,7 @@ exports.registerProduct = function(req,res,next){
 			_creator: dev._id,
 			_name: req.body.name,		
 			token: req.body.token,
-			new_product.category: req.body.categoryid 
+			category: req.body.categoryid 
 		});
 	
 		if(!req.body.hasOwnProperty('image')){
@@ -193,16 +193,16 @@ exports.addProductProperty = function(req, res, next){
 */
 exports.deleteProductProperty = function(req, res, next){
 	Product.findOne( {_creator:req.params.DEVID, _id:req.params.PRODID},
-		function(err, prod) {
+	function(err, prod) {
 		if (err){ 
 			res.send(err);
 			throw err;
 		}
 		if(!prod.removeProperty(req.body.name)){
 			res.send("Property not found");
-			next();			}
+			next();			
 		}
-		product.save(function(err){
+		prod.save(function(err){
     		if(err){
 				res.send(err);
 				throw err;

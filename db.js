@@ -37,11 +37,11 @@ mongoose.connect(dbURI);
 // BRING IN YOUR SCHEMAS & MODELS
 // For example
 /*
-require('./User');
-require('./Developer');
-require('./Product');
-require('./Thing');
-require('./Property');
-require('./Category');
-require('./Token');
+require('./models/User');
+require('./models/Developer');
+require('./models/Product');
+require('./models/Thing');
+require('./models/Property');
+require('./models/Category');
+//require('./models/Token');
 */

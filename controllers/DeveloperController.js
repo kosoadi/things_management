@@ -6,7 +6,7 @@
 */
 
 var mongoose = require('mongoose');
-var Developer = mongoose.model("../models/Developer");
+var Developer = require("../models/Developer");
 var ObjectId = mongoose.Types.ObjectId;
 
 // method to create/register developer
@@ -35,7 +35,7 @@ exports.registerDeveloper = function(req,res,next){
 
 	if(!req.body.hasOwnProperty('website')){
 		new_developer.website = "No Website";
-	}else new_developer.website: req.body.website;
+	}else new_developer.website= req.body.website;
 
 	new_developer.save(function(err){
 		if (err){err
