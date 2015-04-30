@@ -93,11 +93,11 @@ server.put('/sot/user/:USERID/thing/:THINGID', controllers.ThingController.editT
 server.del('/sot/user/:USERID/thing/:THINGID', controllers.ThingController.deleteThing);
 
 server.post('/sot/user/:USERID/thing/:THINGID/property/register', controllers.PropertyController.registerProperty);
-server.get('/sot/property', controllers.PropertyController.);
-server.get('/sot/user/:USERID/thing/:THINGID/property', controllers.PropertyController.);
-server.get('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.);
-server.put('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.);
-server.del('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.);
+server.get('/sot/property', controllers.PropertyController.getAllProperty);
+server.get('/sot/user/:USERID/thing/:THINGID/property', controllers.PropertyController.getAllUserProperty);
+server.get('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.getUserProperty);
+server.put('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.editProperty);
+server.del('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.deleteProperty);
 
 server.listen(4242, function () {
   console.log('%s listening at %s', server.name, server.url);

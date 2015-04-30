@@ -62,13 +62,9 @@ exports.registerProperty = function(req,res,next){
 	next();
 }
 
-// method to get user properties
+// method to get user property
 /*
-	param: USERID, THINGID
-	body:
-	{
-		properties: [Object JSON]
-	}
+	param: USERID, THINGID, PROPNAME
 */
 exports.getUserProperty = function(req, res, next){
 	Thing.findOne({_owner: req.params.USERID, _id:req.params.THINGID}, function(err, thing){
@@ -87,6 +83,10 @@ exports.getUserProperty = function(req, res, next){
 	next();		
 }
 
+// method to get user properties
+/*
+	param: USERID, THINGID
+*/
 exports.getAllUserProperty = function(req, res, next){
 	Thing.findOne({_owner: req.params.USERID, _id:req.params.THINGID}, function(err, thing){
 		if(err){
@@ -104,6 +104,10 @@ exports.getAllUserProperty = function(req, res, next){
 	next();	
 }
 
+// method to get all properties
+/*
+	param: no
+*/
 exports.getAllProperty = function(req, res, next){
 	Property.find({}, function(err, props){
 		if(err){
@@ -115,6 +119,18 @@ exports.getAllProperty = function(req, res, next){
 	next();	
 }
 
+// method to edit a property
+/*
+	param: USERID, THINGID, PROPNAME
+	body:
+	{
+		_name: {type: String, required: true}, // No space allowed
+		access: Boolean,
+		control: Boolean,
+		valueType: String, // STR | INT | DBL | BOOL | ARR | OBJ
+		description: String
+	}
+*/
 exports.editProperty = function(req, res, next){
 	Thing.findOne({_owner: req.params.USERID, _id:req.params.THINGID}, function(err, thing){
 		if(err){
@@ -133,6 +149,11 @@ exports.editProperty = function(req, res, next){
 	next();	
 }
 
+// method to delete a property
+/*
+	param: USERID, THINGID, PROPNAME
+	body: no
+*/
 exports.deleteProperty = function(req, res, next){
 	Thing.findOne({_owner: req.params.USERID, _id:req.params.THINGID}, function(err, thing){
 		if(err){
