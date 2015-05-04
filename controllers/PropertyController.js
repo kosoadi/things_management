@@ -171,3 +171,43 @@ exports.deleteProperty = function(req, res, next){
 	});
 	next();	
 }
+
+// method to get a property value
+/*
+	param: USERID, THINGID, PROPNAME
+	body: no
+*/
+exports.getPropertyValue = function(req, res, next){
+	var userid = req.params.USERID;
+	var thingid = req.params.THINGID;
+	var name = req.params.PROPNAME;
+
+	Property.findOne({_thingid:thingid, _name:name}, function(err, prop){
+		if(err){
+			res.send("Property not found");
+			throw err;
+		}
+		Thing.findOne({_id: prop._thingid}, function(err, thing){
+			if(err){
+				res.send(err);
+				throw err;
+			}
+			if(thing.type == "lifx" && thing.category == "light"){
+				
+			}		
+		});
+	});
+	next();
+}
+
+// method to set a property value
+/*
+	param: USERID, THINGID, PROPNAME
+	body:
+	{
+		value: Object (of various types)
+	}
+*/
+exports.setPropertyValue = function(req, res, next){
+	next();
+}

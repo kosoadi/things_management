@@ -31,12 +31,13 @@ exports.registerProduct = function(req,res,next){
 			_creator: dev._id,
 			_name: req.body.name,		
 			token: req.body.token,
-			category: req.body.categoryid 
+			category: req.body.categoryid, 
+			properties:[]
 		});
 	
 		if(!req.body.hasOwnProperty('image')){
-			new_developer.image = "SET DEFAULT IMAGE URI";
-		} else new_developer.image = req.body.image;
+			new_product.image = "SET DEFAULT IMAGE URI";
+		} else new_product.image = req.body.image;
 
 		// TO DO validate token
 		/*********************/
@@ -152,13 +153,21 @@ exports.deleteProduct = function(req, res, next){
 	param: DEVID, PRODID
 	body:
 	{
-		property: Object of JSON
+		look example below
 	}
 	eg. {
-			name: "hue", access: true, control: true, valueType: "NUM",description:"variable for hue of lighting"
+			
+			name: "hue", 
+			access: true, 
+			control: true, 
+			valueType: "NUM",
+			description:"variable for hue of lighting"
+			min: "0",
+			max: "1"
 		}
 	valueType: "STR","NUM", "BOOL", "ARR", "OBJ", "BUFF"
 */
+
 exports.addProductProperty = function(req, res, next){
 	Product.findOne( {_creator:req.params.DEVID, _id:req.params.PRODID},
 		function(err, prod) {
@@ -166,21 +175,29 @@ exports.addProductProperty = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
-		if(!prod.checkPropertyExist(req.body.property.name)){
-			if(!prod.addProperty(req.body.property)){
-				res.send("Invalid properties definition");
-				next();
+		prod.checkPropertyExist(req.body.name, function(exists){
+			if(!exists){
+				prod.addProperty(req.body, function(result){
+					res.send(result?"y":"n");next();
+					if(!result){
+						res.send("Invalid properties definition");
+						next();
+					}
+					prod.save(function(err){
+    					if(err){
+							res.send(err);
+							throw err;
+					}
+					res.send("Add Property success Product:"+prod._name);
+					next();
+    				});
+				});
 			}
-		}
-		product.save(function(err){
-    		if(err){
-				res.send(err);
-				throw err;
-			}
-			res.send("Add Property success Product:"+prod._name);
-    	});
+			res.writeHead(500);
+			res.send("Product property already exists:"+req.body.name);
+			next();
+		});
 	});
-	next();
 }
 
 // method to remove property of a product
@@ -212,4 +229,3 @@ exports.deleteProductProperty = function(req, res, next){
 	});
 	next();
 }
-

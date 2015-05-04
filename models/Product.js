@@ -13,57 +13,66 @@ var productSchema = new Schema({
 	date_updated: Date
 });
 
-productSchema.method.checkPropertyValidity = function(prop){
+productSchema.methods.checkPropertyValidity = function(prop, cb){
 	for(var p in prop){
 		var valType = prop[p].hasOwnProperty('valueType');
 		
 		if(arr_type.indexOf(valType) < -1){
-			return false;
+			return cb(false);
 		} 
 		if(prop[p].hasOwnProperty('name') && prop[p].hasOwnProperty('access') 
 			&& prop[p].hasOwnProperty('control') && prop[p].hasOwnProperty('description')){		
-			return true;
+			return cb(true);
 		}
 	}
-	return false;
+	return cb(false);
 };
 
-productSchema.method.addProperty = function(prop){
+productSchema.methods.addProperty = function(prop, cb){
 	var arr_type = ["STR","NUM", "BOOL", "ARR", "OBJ", "BUFF"]
 	var valType = prop.hasOwnProperty('valueType');
 	if(arr_type.indexOf(valType) < -1){
-		return false;
-	} 
+		return cb(false);
+	}
 	if((typeof prop.name==="string") && (typeof prop.access==="boolean") 
 		&& (typeof prop.control==="boolean") && (typeof prop.description==="string")){		
-		for(var i in this.properties){
-			if(this.properties[i].name.toUppperCase() === prop.name.toUppperCase()){
-				return false;
+		
+		if(this.properties.length > 0){
+			for(var i in this.properties){
+				if(this.properties[i].name.toUppperCase() === prop.name.toUppperCase()){
+					return cb(false);
+				}
 			}
 		}
 		this.properties.push(prop);
-		return true;
+		return cb(true);
 	}
-	return false;
+	return cb(false);
 };
 
-productSchema.method.checkPropertyExist = function(propName){
+productSchema.methods.checkPropertyExist = function(propName, cb){
+	if(this.properties.length == 0){
+		return cb(false);
+	}
 	for(var p in this.properties){
-		if(properties[p].name.toUppperCase() === propName.toUppperCase()){
-			return true;
+		if(this.properties[p].name.toUppperCase() === propName.toUppperCase()){
+			return cb(true);
 		}
 	}
-	return false;
+	return cb(false);
 };
 
-productSchema.method.removeProperty = function(propName){
+productSchema.methods.removeProperty = function(propName, cb){
+	if(this.properties.length == 0){
+		return cb(false);
+	}
 	for(var i = 0; i<this.properties.length; i++){
 		if(properties[i].name.toUppperCase() === propName.toUppperCase()){
 			this.properties.splice(i, 1); // remove 1 item from properties
-			return true;
+			return cb(false);
 		}
 	}
-	return false;
+	return cb(false);
 };
 
 productSchema.pre('save', function(next){

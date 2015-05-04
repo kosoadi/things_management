@@ -35,30 +35,6 @@ server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
 
-/*
-function getPropertyValue(req, res, next){
-	var userid = req.params.USERID;
-	var thingid = req.params.THINGID;
-	var name = req.params.PROPNAME;
-
-	Property.findOne({_thingid:thingid, _name:name}, function(err, prop){
-		if(err){
-			res.send("Property not found");
-			throw err;
-		}
-		Thing.findOne({_id: prop._thingid}, function(err, thing){
-			if(err){
-				res.send(err);
-				throw err;
-			}
-			if(thing.type == "lifx" && thing.category == "light"){
-				
-			}		
-		});
-	});
-}
-*/
-
 server.post('/sot/category/register', controllers.CategoryController.registerCategory);
 server.get('/sot/category', controllers.CategoryController.getAllCategory);
 server.put('/sot/category', controllers.CategoryController.editCategory);
@@ -100,6 +76,9 @@ server.get('/sot/user/:USERID/thing/:THINGID/property', controllers.PropertyCont
 server.get('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.getUserProperty);
 server.put('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.editProperty);
 server.del('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.deleteProperty);
+
+server.get('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME/acc', controllers.PropertyController.getPropertyValue);
+server.put('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME/ctl', controllers.PropertyController.getPropertyValue);
 
 server.listen(4242, function () {
   console.log('%s listening at %s', server.name, server.url);

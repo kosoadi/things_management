@@ -18,7 +18,7 @@ var developerSchema = new Schema({
 });
 
 //username: {type: String, required: true}
-developerSchema.method.validate = function(){
+developerSchema.methods.validate = function(){
 	// TO DO Implementation
 };
 

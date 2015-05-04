@@ -42,7 +42,9 @@ exports.registerThing = function(req,res,next){
 			throw err;
 		}
 		new_thing._product = prod._id;
-		new_thing.validateTypeCategory(new_thing._product);
+		//new_thing.validateTypeCategory(prod._id);
+		new_thing.type = prod._name;
+		new_thing.category = prod.category._name;
 	});
 		
     new_thing.save(function(err){
@@ -61,7 +63,7 @@ exports.registerThing = function(req,res,next){
 					res.send(err);
 					throw err;
 				}
-				res.send("New thing created: "+new_thing._name+" by "+user._username);		
+				res.send("New thing created: "+new_thing.name+" by "+user._username);		
     		});
     	});
     });

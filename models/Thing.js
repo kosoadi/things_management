@@ -25,7 +25,7 @@ var thingSchema = new Schema({
 
 thingSchema.index({_owner: 1, _id: 1}, {unique: true});
 
-thingSchema.method.validateTypeCategory = function (productId){
+thingSchema.methods.validateTypeCategory = function (productId, next){
 	Thing
 		.findOne({ _product: productId})
 		.populate('_product')

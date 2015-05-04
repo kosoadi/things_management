@@ -8,6 +8,8 @@ var propertySchema = new Schema({
 	control: Boolean,
 	valueType: String, // STR | INT | DBL | BOOL | ARR | OBJ
 	description: String,
+	min: String,
+	max: String,
 	date_created: Date,
 	date_updated: Date
 });
