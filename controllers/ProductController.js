@@ -175,27 +175,30 @@ exports.addProductProperty = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
-		prod.checkPropertyExist(req.body.name, function(exists){
-			if(!exists){
-				prod.addProperty(req.body, function(result){
-					res.send(result?"y":"n");next();
-					if(!result){
-						res.send("Invalid properties definition");
-						next();
-					}
-					prod.save(function(err){
-    					if(err){
-							res.send(err);
-							throw err;
-					}
-					res.send("Add Property success Product:"+prod._name);
-					next();
-    				});
-				});
+		var prop = {
+			name:req.body.name.toLowerCase(), 
+			access: req.body.access, 
+			control: req.body.control, 
+			valueType: req.body.valueType,
+			description: req.body.description,
+			min: req.body.min,
+			max: req.body.max
+		};
+		
+		prod.checkPropertyExists(prop.name, function(err1){
+			if(err1){
+				res.send(err1);
+				throw err1;
 			}
-			res.writeHead(500);
-			res.send("Product property already exists:"+req.body.name);
-			next();
+			prod.properties.push(prop);
+			prod.save(function(err){
+    			if(err){
+					res.send(err);
+					throw err;
+				}
+				res.send("Add Property success: "+prop.name+"@"+prod._name);
+				next();
+			});
 		});
 	});
 }
@@ -215,17 +218,28 @@ exports.deleteProductProperty = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
-		if(!prod.removeProperty(req.body.name)){
-			res.send("Property not found");
-			next();			
-		}
-		prod.save(function(err){
-    		if(err){
-				res.send(err);
-				throw err;
+		if(prod.properties.length > 0){
+			for(var i=0; i<prod.properties.length; i++){
+				if(prod.properties[i].name.toLowerCase()===req.body.name.toLowerCase()){
+					var doc = prod.properties.id(prod.properties[i]._id).remove();
+					prod.save(function(err){
+    					if(err){
+							res.send(err);
+							throw err;
+						}
+					});
+					res.send("Delete Property success: "+req.body.name.toLowerCase()+"@"+prod._name);
+					next();
+				}
 			}
-			res.send("Remove Property success Product:"+prod._name);
-    	});
+			var new_err1 = new Error("Property: "+ req.body.name.toLowerCase()+" is not found");
+			res.send(new_err1);
+			throw new_err1;
+		}else{
+			var new_err2 = new Error("No property defined: "+prod._name);
+			res.send(new_err2);
+			throw new_err2;
+		}
 	});
 	next();
 }
