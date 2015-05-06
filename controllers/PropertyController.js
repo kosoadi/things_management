@@ -45,14 +45,14 @@ exports.registerProperty = function(req,res,next){
 				max: properties[p].max
 			});
 			new_property.save(function(err){
-				if(err){
+				if(err, prop){
 					res.send("Invalid properties definition");
 					throw err;
 				}
 				thing.properties.push(new_property);
 				thing.save(function(err){
 					if(err){
-						Property.find({_thingid: thing._id, _id:new_property._id}).remove();
+						Property.find({_thingid: thing._id, _id:prop._id}).remove();
 						res.send(err);
 						throw err;
 					}
