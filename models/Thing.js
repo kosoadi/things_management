@@ -17,13 +17,14 @@ var thingSchema = new Schema({
 	category: String,
 	location: String,
 	endpoint: String,
-	token: String,
+	token: {type: String, required: true},
 	date_created: Date,
 	date_updated: Date,
+	postid: String,
 	properties: [{type: Schema.Types.ObjectId, ref: 'Property'}]
 });
 
-thingSchema.index({_owner: 1, _id: 1}, {unique: true});
+thingSchema.index({_owner: 1, token:1, name:1}, {unique: true});
 
 thingSchema.methods.validateTypeCategory = function (productId, next){
 	Thing
@@ -38,7 +39,7 @@ thingSchema.methods.validateTypeCategory = function (productId, next){
 };
 
 thingSchema.pre('save', function(next){
-	//thingScheme.validateTypeCategory(this._product);
+	
 	var current_date = new Date();
 	this.date_updated = current_date;
 	if(!this.date_created){

@@ -7,6 +7,7 @@
 
 var mongoose = require('mongoose');
 var User = require("../models/User");
+var Thing = require("../models/Thing");
 var ObjectId = mongoose.Types.ObjectId;
 
 // method to regUserserrequire
@@ -22,11 +23,11 @@ exports.registerUser = function(req,res,next){
 	var new_user = new User({
 		_username: req.body.username,
 		name: req.body.name,
-		status: true
+		status: true,
+		things: []
 	});
 	new_user.save(function(err){
-		if (err){err
-			console.error(err);
+		if (err){
 			res.send(err);
 			throw err;
 		}
@@ -108,13 +109,18 @@ exports.editUser = function(req, res, next){
 	body: no
 */
 exports.deleteUser = function(req, res, next){
-	User.findOneAndRemove( {_id:req.params.USERID},
-		function(err, user) {
+	User.findOneAndRemove( {_id:req.params.USERID},function(err, user) {
 		if (err){ 
 			res.send(err);
 			throw err;
 		}
-		res.send("Delete success user:"+user._username+"@id:"+user._id);
+		Thing.find({_owner:req.params.USERID}).remove(function(err){
+			if (err){ 
+				res.send(err);
+				throw err;
+			}
+			res.send("Delete success user:"+user.name+"@id:"+user._id);
+		});
 	});
 	next();	
 }

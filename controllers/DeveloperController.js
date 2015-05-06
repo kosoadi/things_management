@@ -7,6 +7,7 @@
 
 var mongoose = require('mongoose');
 var Developer = require("../models/Developer");
+var Product = require("../models/Product");
 var ObjectId = mongoose.Types.ObjectId;
 
 // method to create/register developer
@@ -131,7 +132,51 @@ exports.deleteDeveloper = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
-		res.send("Delete success Developer:"+dev._username+"@id:"+dev._id);
+		Product.find({_creator: dev._id}, function(err, products){
+			if (err){ 
+				res.send(err);
+				throw err;
+			}
+			for(var i=0; i<products.length; i++){
+				products[i].remove(function(err){
+					if (err){ 
+						res.send(err);
+						throw err;
+					}
+					Thing.find({_product: products[i]._id}, function(err, things){
+						if (err){ 
+							res.send(err);
+							throw err;
+						}
+						for(var i=0; i<things.length; i++){
+							things[i].remove(function(err){
+								if (err){ 
+									res.send(err);
+									throw err;
+								}
+								User.find({_id: things[i]._owner}, function(err, user){
+									var index = user.things.indexOf(things[i]._owner);
+									user.things.splice(index, 1);
+									user.save(function(err){
+										if (err){
+											res.send(err);
+											throw err;
+										}
+										Property.find({_thingid: things[i]._id}).remove(function(err){
+											if (err){ 
+												res.send(err);
+												throw err;
+											}	
+										});	
+									});
+								});	
+							});
+						}
+					});
+				});
+			}
+			res.send("Delete success Developer:"+dev._username+"@id:"+dev._id);	
+		});
 	});
 	next();	
 }

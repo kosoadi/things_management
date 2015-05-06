@@ -24,40 +24,43 @@ var ObjectId = mongoose.Types.ObjectId;
 exports.registerProperty = function(req,res,next){
 	var userid = req.params.USERID;
 	var thingid = req.params.THINGID;
-	var properties = JSON.parse(req.body.properties);
+	var properties = req.body.properties;
 
 	Thing.findOne({_owner: userid, _id:thingid}, function(err, thing){
 		if (err){ 
 			res.send(err);
 			throw err;
 		}
-		for(var p in properties){
+		for(var i=0; i<properties.length; i++){
+			var temp = properties[p].name.replace(/\s/g,'');
+			var name = temp.toLowerCase();
 			new_property = new Property({
 				_thingid: thingid,
-				_name: properties[p].name,
+				_name: name,
 				access: properties[p].access,
 				control: properties[p].control,
 				valueType: properties[p].valueType,
-				description: properties[p].description
+				description: properties[p].description,
+				min: properties[p].min,
+				max: properties[p].max
 			});
-
 			new_property.save(function(err){
 				if(err){
 					res.send("Invalid properties definition");
 					throw err;
 				}
 				thing.properties.push(new_property);
+				thing.save(function(err){
+					if(err){
+						Property.find({_thingid: thing._id, _id:new_property._id}).remove();
+						res.send(err);
+						throw err;
+					}
+					res.send("Properties added");
+				});
 			});
 		}
-		
-		thing.save(function(err){
-			if(err){
-				Property.find({_thingid: thing._id}).remove();
-				res.send(err);
-				throw err;
-			}
-			res.send("Properties added");
-		});		
+		next();
 	});
 	next();
 }
@@ -166,7 +169,15 @@ exports.deleteProperty = function(req, res, next){
 					res.send(err);
 					throw err;
 				}
-				res.send("Delete success Property:"+prop._name+"@id:"+prop._id);
+				var index = thing.properties.indexOf(prop._id);
+				thing.properties.splice(index, 1);
+				thing.save(function(err){
+					if (err){
+						res.send(err);
+						throw err;
+					}
+					res.send("Delete success Property:"+prop._name+"@"+thing.name);
+				});
 		});
 	});
 	next();	

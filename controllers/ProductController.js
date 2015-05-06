@@ -8,6 +8,9 @@ var mongoose = require('mongoose');
 var Product = require("../models/Product");
 var Developer = require("../models/Developer");
 var Category = require("../models/Category");
+var Thing = require("../models/Thing");
+var Property = require("../models/Property");
+var User = require("../models/User");
 var ObjectId = mongoose.Types.ObjectId;
 
 // method to create/register developer
@@ -143,7 +146,51 @@ exports.deleteProduct = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
-		res.send("Delete success Product:"+prod._name+"@id:"+prod._id);
+		Thing.find({_product: prod._id}, function(err, things){
+			if (err){ 
+				res.send(err);
+				throw err;
+			}
+			for(var i=0; i<things.length; i++){
+				things[i].remove(function(err){
+					if (err){ 
+						res.send(err);
+						throw err;
+					}
+					User.find({_id: things[i]._owner}, function(err, user){
+						var index = user.things.indexOf(things[i]._owner);
+						user.things.splice(index, 1);
+						user.save(function(err){
+							if (err){
+								res.send(err);
+								throw err;
+							}
+							Property.find({_thingid: things[i]._id}).remove(function(err){
+								if (err){ 
+									res.send(err);
+									throw err;
+								}	
+							});	
+						});
+					});	
+				});
+			}
+			Developer.findOne({_id: req.params.DEVID}, function(err, dev){
+				if (err){ 
+					res.send(err);
+					throw err;
+				}	
+				var index = dev.products.indexOf(prod._id);
+				dev.products.splice(index, 1);
+				dev.save(function(err){
+					if (err){
+						res.send(err);
+						throw err;
+					}
+					res.send("Delete success Product:"+prod.name+"@"+dev.name);
+				});
+			});	
+		});
 	});
 	next();	
 }
@@ -175,8 +222,10 @@ exports.addProductProperty = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
+		var temp = req.body.name.replace(/\s/g,'');
+		var name = temp.toLowerCase();
 		var prop = {
-			name:req.body.name.toLowerCase(), 
+			name:name, 
 			access: req.body.access, 
 			control: req.body.control, 
 			valueType: req.body.valueType,

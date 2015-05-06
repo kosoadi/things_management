@@ -9,6 +9,7 @@ var Thing = require("../models/Thing");
 var Category = require("../models/Category");
 var Developer = require("../models/Developer");
 var Product = require("../models/Product");
+var Property = require("../models/Property");
 var User = require("../models/User");
 var ObjectId = mongoose.Types.ObjectId;
 
@@ -21,7 +22,8 @@ var ObjectId = mongoose.Types.ObjectId;
 		location: String,
 		endpoint: String,
 		token: String,
-		prodid: ObjectId of Product
+		prodid: ObjectId of Product,
+		postid: String (OPTIONAL)
 	}
 */
 exports.registerThing = function(req,res,next){
@@ -42,32 +44,31 @@ exports.registerThing = function(req,res,next){
 			throw err;
 		}
 		new_thing._product = prod._id;
-		//new_thing.validateTypeCategory(prod._id);
 		new_thing.type = prod._name;
 		new_thing.category = prod.category._name;
-	});
-		
-    new_thing.save(function(err){
-    	if(err){
-			res.send(err);
-			throw err;
-		}
-    	User.findOne({_id: new_thing._owner}, function(err, user){
+
+		new_thing.save(function(err){
     		if(err){
 				res.send(err);
 				throw err;
 			}
-			user.things.push(new_thing);	
-    		user.save(function(err){
+    		User.findOne({_id: new_thing._owner}, function(err, user){
     			if(err){
 					res.send(err);
 					throw err;
 				}
-				res.send("New thing created: "+new_thing.name+" by "+user._username);		
+				user.things.push(new_thing);	
+    			user.save(function(err){
+    				if(err){
+						res.send(err);
+						throw err;
+					}
+					res.send("New thing created: "+new_thing.name+" by "+user._username);		
+    				next();
+    			});
     		});
     	});
-    });
-    next();
+	});
 }
 
 // method to get a thing of a user
@@ -123,11 +124,11 @@ exports.getAllThing = function(req, res, next){
 	param: USERID, THINGID
 	body:
 	{
-		_product: ObjectId,
 		name: String,
 		location: String,
 		endpoint: String,
-		token: String
+		token: String,
+		postid: String
 	}
 */
 exports.editThing = function(req, res, next){
@@ -137,7 +138,6 @@ exports.editThing = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
-		thing.validateTypeCategory(thing._product);
 		res.send("Update success Thing:"+thing.name+"@id:"+thing._id);
 	});
 	next();	
@@ -155,7 +155,27 @@ exports.deleteThing = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
-		res.send("Delete success Thing:"+thing.name+"@id:"+thing._id);
+		Property.find({_thingid: thing._id}).remove(function(err){
+			if (err){ 
+				res.send(err);
+				throw err;
+			}
+			User.findOne({_id: req.params.USERID}, function(err, user){
+				if (err){ 
+					res.send(err);
+					throw err;
+				}	
+				var index = user.things.indexOf(thing._id);
+				user.things.splice(index, 1);
+				user.save(function(err){
+					if (err){
+						res.send(err);
+						throw err;
+					}
+					res.send("Delete success Thing:"+thing.name+"@: "+user.name);
+				});
+			});	
+		});
 	});
-	next();	
+	next();
 }
