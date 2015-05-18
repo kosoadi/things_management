@@ -10,7 +10,7 @@ var User = require("../models/User");
 var Thing = require("../models/Thing");
 var ObjectId = mongoose.Types.ObjectId;
 
-// method to regUserserrequire
+// method to regUser
 /*
 	param: no
 	body:
@@ -32,6 +32,22 @@ exports.registerUser = function(req,res,next){
 			throw err;
 		}
 		res.send("New user registered: "+ new_user._email + " @ "+ new_user.name);
+	});
+	next();
+}
+
+// method to check user exist
+/*
+	param: EMAIL
+	body: no
+*/
+exports.checkUser = function(req,res,next){
+	User.find({_email: req.params.EMAIL}, function(err, user) {
+		if (err){ 
+			res.send(err);
+			throw err;
+		}
+		res.send(user);
 	});
 	next();
 }

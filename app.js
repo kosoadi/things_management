@@ -43,6 +43,7 @@ server.get('/sot/category/:CATID/product', controllers.CategoryController.getAll
 server.get('/sot/category/:CATID/thing', controllers.CategoryController.getAllThingByCategory);
 
 server.post('/sot/user/register', controllers.UserController.registerUser);
+server.get('/sot/user/check/email=:EMAIL', controllers.UserController.checkUser);
 server.get('/sot/user', controllers.UserController.getAllUser);
 server.get('/sot/user/:USERID', controllers.UserController.getUser);
 server.put('/sot/user/:USERID', controllers.UserController.editUser);
