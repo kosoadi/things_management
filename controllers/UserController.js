@@ -15,13 +15,13 @@ var ObjectId = mongoose.Types.ObjectId;
 	param: no
 	body:
 	{
-		username: String,
+		email: String,
 		name: String
 	}
 */
 exports.registerUser = function(req,res,next){
 	var new_user = new User({
-		_username: req.body.username,
+		_email: req.body.email,
 		name: req.body.name,
 		status: true,
 		things: []
@@ -31,7 +31,7 @@ exports.registerUser = function(req,res,next){
 			res.send(err);
 			throw err;
 		}
-		res.send("New user registered: "+ new_user._username + " @ "+ new_user.name);
+		res.send("New user registered: "+ new_user._email + " @ "+ new_user.name);
 	});
 	next();
 }
@@ -75,7 +75,7 @@ exports.removeUser = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
-		res.send("Successfully changed status to INACTIVE user:"+user._username+"@id:"+user._id);
+		res.send("Successfully changed status to INACTIVE user:"+user._email+"@id:"+user._id);
 	});
 	next();	
 }
@@ -98,7 +98,7 @@ exports.editUser = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
-		res.send("Update success user:"+user._username+"@id:"+user._id);
+		res.send("Update success user:"+user._email+"@id:"+user._id);
 	});
 	next();	
 }
