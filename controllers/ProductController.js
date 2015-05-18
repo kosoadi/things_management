@@ -79,6 +79,15 @@ exports.getDeveloperProduct = function(req, res, next){
 	next();	
 }
 
+// method to generate tokens of a product of a developer
+/*
+	param: DEVID, PRODID, SIZE
+	body: no
+*/
+exports.getGeneratedTokens = function(req, res, next){
+	next();	
+}
+
 // method to get all products by a developer
 /*
 	param: DEVID

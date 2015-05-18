@@ -20,7 +20,6 @@ var thingSchema = new Schema({
 	token: {type: String, required: true},
 	date_created: Date,
 	date_updated: Date,
-	postid: String,
 	properties: [{type: Schema.Types.ObjectId, ref: 'Property'}]
 });
 

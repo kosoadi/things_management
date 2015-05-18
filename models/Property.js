@@ -8,10 +8,11 @@ var propertySchema = new Schema({
 	control: Boolean,
 	valueType: String, // STR | INT | DBL | BOOL | ARR | OBJ
 	description: String,
-	min: String,
-	max: String,
+	min: Schema.Types.Mixed,
+	max: Schema.Types.Mixed,
 	date_created: Date,
-	date_updated: Date
+	date_updated: Date,
+	postid: [String]
 });
 
 propertySchema.index({_thingid: 1, _name: 1}, {unique: true});

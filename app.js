@@ -58,6 +58,7 @@ server.post('/sot/developer/:DEVID/product/register', controllers.ProductControl
 server.get('/sot/product', controllers.ProductController.getAllProduct);
 server.get('/sot/developer/:DEVID/product', controllers.ProductController.getAllDeveloperProduct);
 server.get('/sot/developer/:DEVID/product/:PRODID', controllers.ProductController.getDeveloperProduct);
+server.get('/sot/developer/:DEVID/product/:PRODID/gentoken/:SIZE', controllers.ProductController.getGeneratedTokens);
 server.put('/sot/developer/:DEVID/product/:PRODID', controllers.ProductController.editProduct);
 server.del('/sot/developer/:DEVID/product/:PRODID', controllers.ProductController.deleteProduct);
 server.put('/sot/developer/:DEVID/product/:PRODID/property', controllers.ProductController.addProductProperty);

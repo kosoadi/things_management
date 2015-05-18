@@ -22,8 +22,7 @@ var ObjectId = mongoose.Types.ObjectId;
 		location: String,
 		endpoint: String,
 		token: String,
-		prodid: ObjectId of Product,
-		postid: String (OPTIONAL)
+		prodid: ObjectId of Product
 	}
 */
 exports.registerThing = function(req,res,next){
@@ -127,8 +126,7 @@ exports.getAllThing = function(req, res, next){
 		name: String,
 		location: String,
 		endpoint: String,
-		token: String,
-		postid: String
+		token: String
 	}
 */
 exports.editThing = function(req, res, next){
