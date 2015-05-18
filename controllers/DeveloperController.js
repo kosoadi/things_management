@@ -27,7 +27,8 @@ exports.registerDeveloper = function(req,res,next){
 		name: req.body.name,
 		password: req.body.password,
 		description: req.body.description,
-		status: true
+		status: true,
+		products: []
 	});
 	
 	if(!req.body.hasOwnProperty('image')){
@@ -37,14 +38,12 @@ exports.registerDeveloper = function(req,res,next){
 	if(!req.body.hasOwnProperty('website')){
 		new_developer.website = "No Website";
 	}else new_developer.website= req.body.website;
-
 	new_developer.save(function(err){
-		if (err){err
-			console.error(err);
+		if (err){
 			res.send(err);
 			throw err;
 		}
-		res.send("New developer registered: "+ new_developer._username + "@"+ new_developer.name);
+		res.send("New developer registered: "+ req.body.username + "@"+req.body.name); next();
 	});
 	next();
 }

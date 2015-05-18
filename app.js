@@ -19,7 +19,7 @@ var Category = require('./models/Category');
 */
 
 var controllers = {}
-	, controllers_path = process.cwd() + '/controllers' 
+	, controllers_path = process.cwd()+ '/things_management/controllers' 
 	fs.readdirSync(controllers_path).forEach(function (file) {
     	if (file.indexOf('.js') != -1) {
         	controllers[file.split('.')[0]] = require(controllers_path + '/' + file)

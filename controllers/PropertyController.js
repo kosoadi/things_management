@@ -32,20 +32,20 @@ exports.registerProperty = function(req,res,next){
 			throw err;
 		}
 		for(var i=0; i<properties.length; i++){
-			var temp = properties[p].name.replace(/\s/g,'');
+			var temp = properties[i].name.replace(/\s/g,'');
 			var name = temp.toLowerCase();
 			new_property = new Property({
 				_thingid: thingid,
 				_name: name,
-				access: properties[p].access,
-				control: properties[p].control,
-				valueType: properties[p].valueType,
-				description: properties[p].description,
-				min: properties[p].min,
-				max: properties[p].max
+				access: properties[i].access,
+				control: properties[i].control,
+				valueType: properties[i].valueType,
+				description: properties[i].description,
+				min: properties[i].min,
+				max: properties[i].max
 			});
-			new_property.save(function(err){
-				if(err, prop){
+			new_property.save(function(err, prop){
+				if(err){
 					res.send("Invalid properties definition");
 					throw err;
 				}
@@ -56,10 +56,10 @@ exports.registerProperty = function(req,res,next){
 						res.send(err);
 						throw err;
 					}
-					res.send("Properties added");
 				});
 			});
 		}
+		res.send("Properties added");
 		next();
 	});
 	next();

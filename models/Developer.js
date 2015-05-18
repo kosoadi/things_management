@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 
 var developerSchema = new Schema({
 	_username: {type: String, required: true, unique: true},
-	name: {type: String, unique: true, required: true},
+	name: {type: String, required: true},
 	password: String,
 	description: String,
 	website: String,
@@ -16,11 +16,6 @@ var developerSchema = new Schema({
 	max_product: Number,
 	products: [{type: Schema.Types.ObjectId, ref: 'Product'}]
 });
-
-//username: {type: String, required: true}
-developerSchema.methods.validate = function(){
-	// TO DO Implementation
-};
 
 developerSchema.pre('save', function(next){
 	var current_date = new Date();

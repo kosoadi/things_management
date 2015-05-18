@@ -32,7 +32,7 @@ productSchema.methods.checkPropertyExists = function(propName, cb){
 };
 
 propSchema.pre('save', function(next){
-	var arr_type = ["STR","NUM", "BOOL", "ARR", "OBJ", "BUFF","DATE"];
+	var arr_type = ["STR","INT","DBL", "BOOL", "ARR", "OBJ", "BUFF","DATE"];
 	if(arr_type.indexOf(this.valueType) === -1){
 		return next(new Error("invalid valueType"));
 	}
