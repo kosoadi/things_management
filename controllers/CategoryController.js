@@ -27,7 +27,7 @@ exports.registerCategory = function(req,res,next){
 	}else new_category.image = req.body.image;
 
 	new_category.save(function(err){
-		if (err){err
+		if (err){
 			res.send(err);
 			throw err;
 		}
