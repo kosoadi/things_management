@@ -42,7 +42,7 @@ exports.registerUser = function(req,res,next){
 	body: no
 */
 exports.checkUser = function(req,res,next){
-	User.find({_email: req.params.EMAIL}, function(err, user) {
+	User.findOne({_email: req.params.EMAIL}, function(err, user) {
 		if (err){ 
 			res.send(err);
 			throw err;

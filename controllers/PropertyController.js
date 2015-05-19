@@ -31,22 +31,36 @@ exports.registerProperty = function(req,res,next){
 			res.send(err);
 			throw err;
 		}
-		for(var i=0; i<properties.length; i++){
-			var temp = properties[i].name.replace(/\s/g,'');
-			var name = temp.toLowerCase();
-			new_property = new Property({
-				_thingid: thingid,
-				_name: name,
-				access: properties[i].access,
-				control: properties[i].control,
-				valueType: properties[i].valueType,
-				description: properties[i].description,
-				min: properties[i].min,
-				max: properties[i].max
-			});
+		//for(var i=0; i<properties.length; i++){
+			//var temp = properties[i].name.replace(/\s/g,'');
+			//var name = temp.toLowerCase();
+			//new_property = new Property({
+			//	_thingid: thingid,
+			//	_name: name,
+			//	access: properties[i].access,
+			//	control: properties[i].control,
+			//	valueType: properties[i].valueType,
+			//	description: properties[i].description,
+			//	min: properties[i].min,
+			//	max: properties[i].max
+			//});
+			
+			var temp = req.body.name.replace(/\s/g,'');
+                        var name = temp.toLowerCase();
+                        new_property = new Property({
+                                _thingid: thingid,
+                                _name: name,
+                                access: req.body.access,
+                                control: req.body.control,
+                                valueType: req.body.valueType,
+                                description: req.body.description,
+                                min: req.body.min,
+                                max: req.body.max
+                        });
+		
 			new_property.save(function(err, prop){
 				if(err){
-					res.send("Invalid properties definition");
+					res.send(err);
 					throw err;
 				}
 				thing.properties.push(new_property);
@@ -56,11 +70,10 @@ exports.registerProperty = function(req,res,next){
 						res.send(err);
 						throw err;
 					}
+					res.send("Property added: "+prop._name+"@"+thing.name);
+					next();
 				});
 			});
-		}
-		res.send("Properties added");
-		next();
 	});
 	next();
 }
