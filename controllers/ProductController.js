@@ -13,6 +13,12 @@ var Property = require("../models/Property");
 var User = require("../models/User");
 var ObjectId = mongoose.Types.ObjectId;
 
+var uuid = require('node-uuid');
+
+var crypto = require('crypto');
+var algorithm = 'aes-256-gcm';
+var password = 'thisispassword';
+
 // method to create/register developer
 /*
 	param: DEVID
@@ -84,7 +90,35 @@ exports.getDeveloperProduct = function(req, res, next){
 	param: DEVID, PRODID, SIZE
 	body: no
 */
+// http://lollyrock.com/articles/nodejs-encryption/
 exports.getGeneratedTokens = function(req, res, next){
+	Product.findOne({_creator: req.params.DEVID, _id:req.params.PRODID}, function(err, prod) {
+		if (err){ 
+			res.send(err);
+			throw err;
+		}
+		var text = prod._id;
+		var tokens = [];
+		var size = req.params.SIZE;		
+		// initialization vector
+		var init_vector = "";
+		var cipher = null;
+		var temp = "";
+		for(int i = 0; i<size; i++){
+			init_vector = uuid.v4();
+			cipher = crypto.createCipheriv(algorithm, password, init_vector);
+			var encrypted = cipher.update(text, 'utf8', 'hex');
+			encrypted += cipher.final('hex');
+  			var tag = cipher.getAuthTag();
+			tokens.push({tag: tag, content: encrypted});
+		}
+		if(size===1){
+			res.send(tokens[0]);
+			next();
+		}
+		res.send(tokens);
+		next();
+	});
 	next();	
 }
 
