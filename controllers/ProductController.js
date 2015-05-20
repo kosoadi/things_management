@@ -12,11 +12,8 @@ var Thing = require("../models/Thing");
 var Property = require("../models/Property");
 var User = require("../models/User");
 var ObjectId = mongoose.Types.ObjectId;
-
-var uuid = require('node-uuid');
-
 var crypto = require('crypto');
-var algorithm = 'aes-256-gcm';
+var algorithm = 'aes-256-ctr';
 var password = '12345678901234567890123456789012';
 
 // method to create/register developer
@@ -25,7 +22,6 @@ var password = '12345678901234567890123456789012';
 	body:
 	{
 		name: String,
-		token: String,
 		categoryid: ObjectId,
 		image: String URI
 	}
@@ -47,9 +43,6 @@ exports.registerProduct = function(req,res,next){
 		if(!req.body.hasOwnProperty('image')){
 			new_product.image = "SET DEFAULT IMAGE URI";
 		} else new_product.image = req.body.image;
-
-		// TO DO validate token
-		/*********************/
 
     	new_product.save(function(err){
     		if(err){
@@ -90,35 +83,20 @@ exports.getDeveloperProduct = function(req, res, next){
 	param: DEVID, PRODID, SIZE
 	body: no
 */
-// http://lollyrock.com/articles/nodejs-encryption/
 exports.getGeneratedTokens = function(req, res, next){
 	Product.findOne({_creator: req.params.DEVID, _id:req.params.PRODID}, function(err, prod) {
 		if (err){ 
 			res.send(err);
 			throw err;
 		}
-		var text = req.params.PRODID;
-		var tokens = [];
-		var size = req.params.SIZE;		
-		// initialization vector
-		var init_vector = "";
-		var cipher = null;
-		var temp = "";
-		for(var i = 0; i<size; i++){
-			//init_vector = uuid.v4();
-			init_vector = "123456789012";
-			cipher = crypto.createCipheriv(algorithm, password, init_vector);
-			var encrypted = cipher.update(text, 'utf8', 'hex');
-			encrypted += cipher.final('hex');
-  			var tag = cipher.getAuthTag();
-			tokens.push({tag: tag, content: encrypted});
-		}
-		if(size===1){
-			res.send(tokens[0]);
+		prod.generateToken(req.params.SIZE, function(err, tokens){
+			if(err){
+				res.send(err);
+				throw err;
+			}
+			res.send(tokens);
 			next();
-		}
-		res.send(tokens);
-		next();
+		});
 	});
 	next();	
 }

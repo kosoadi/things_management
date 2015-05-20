@@ -12,7 +12,10 @@ var propertySchema = new Schema({
 	max: Schema.Types.Mixed,
 	date_created: Date,
 	date_updated: Date,
-	postid: [String]
+	shares: [{
+		postid: String,
+		level: Number, // 0:share info; 1:share access; 2:share control; 3:access&control 
+	}]
 });
 
 propertySchema.index({_thingid: 1, _name: 1}, {unique: true});

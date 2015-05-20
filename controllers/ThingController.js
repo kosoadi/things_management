@@ -30,11 +30,8 @@ exports.registerThing = function(req,res,next){
 		_owner: req.params.USERID,
 		name: req.body.name,
 		location: req.body.location,
-		endpoint: req.body.endpoint,
-		token: req.body.token
+		endpoint: req.body.endpoint
 	});
-
-	// TO DO validate TOKEN
 
 	Product
 	.findOne({ _id: req.body.prodid}, function(err, prod){
@@ -42,31 +39,38 @@ exports.registerThing = function(req,res,next){
 			res.send("Product/Type does not exist");
 			throw err;
 		}
-		new_thing._product = prod._id;
-		new_thing.type = prod._name;
-		new_thing.category = prod.category._name;
-
-		new_thing.save(function(err){
-    		if(err){
+		prod.validateToken(req.body.token, function(err){
+			if(err){
 				res.send(err);
 				throw err;
 			}
-    		User.findOne({_id: new_thing._owner}, function(err, user){
+			new_thing.token = req.body.token;	
+			new_thing._product = prod._id;
+			new_thing.type = prod._name;
+			new_thing.category = prod.category._name;
+	
+			new_thing.save(function(err){
     			if(err){
 					res.send(err);
 					throw err;
 				}
-				user.things.push(new_thing);	
-    			user.save(function(err){
+    			User.findOne({_id: new_thing._owner}, function(err, user){
     				if(err){
 						res.send(err);
 						throw err;
 					}
-					res.send("New thing created: "+new_thing.name+" by "+user._username);		
-    				next();
+					user.things.push(new_thing);	
+    				user.save(function(err){
+    					if(err){
+							res.send(err);
+							throw err;
+						}
+						res.send("New thing created: "+new_thing.name+" by "+user._username);		
+    					next();
+    				});
     			});
     		});
-    	});
+		});
 	});
 }
 
