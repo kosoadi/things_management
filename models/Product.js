@@ -59,7 +59,7 @@ productSchema.methods.validateToken = function (token, next){
 
 productSchema.methods.generateToken = function (size, next){
 		if(size<1){
-			var err = new Error("Invalid size");
+		var err = new Error("Invalid size");
 			return next(err, {});
 		}
 		var text = this.token.split("-");
@@ -67,16 +67,15 @@ productSchema.methods.generateToken = function (size, next){
 		var toEnc = "";
 		// initialization vector
 		var init_vector = [];
-		var cipher = crypto.createCipher(algorithm, password);;
-
-		for(var i = 0; i<size; i++){
+		var cipher = crypto.createCipher(algorithm, password);
+		for( i = 0; i<size; i++){
 			init_vector = uuid.v4().split("-"); // size:5 // e.g. 110ec58a-a0f2-4ac4-8393-c866d813b8d1
-			toEnc = init_vector[0]+text[0]+init_vector[1]+text[1]+init_vector[2]+text[2]+init_vector[3]+text[3]+init_vector[4]+text[4];
+			toEnc = ""+init_vector[0]+text[0]+init_vector[1]+text[1]+init_vector[2]+text[2]+init_vector[3]+text[3]+init_vector[4]+text[4];
 			var encrypted = cipher.update(toEnc, 'utf8', 'hex');
 			encrypted += cipher.final('hex');
-			tokens.push({encrypted); // 56 characters 
+			tokens.push(encrypted); // 56 characters 
 		}
-		if(size===1){
+		if(tokens.length==1){
 			return next(false, tokens[0]);
 		} else return next(false, tokens);
 };

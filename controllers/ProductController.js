@@ -15,7 +15,7 @@ var ObjectId = mongoose.Types.ObjectId;
 var crypto = require('crypto');
 var algorithm = 'aes-256-ctr';
 var password = '12345678901234567890123456789012';
-
+var uuid = require('node-uuid');
 // method to create/register developer
 /*
 	param: DEVID
@@ -35,11 +35,12 @@ exports.registerProduct = function(req,res,next){
 		var new_product = new Product({
 			_creator: dev._id,
 			_name: req.body.name,		
-			token: req.body.token,
 			category: req.body.categoryid, 
+			description: req.body.description,
+			token:uuid.v4(),
 			properties:[]
 		});
-	
+			
 		if(!req.body.hasOwnProperty('image')){
 			new_product.image = "SET DEFAULT IMAGE URI";
 		} else new_product.image = req.body.image;
@@ -89,7 +90,7 @@ exports.getGeneratedTokens = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
-		prod.generateToken(req.params.SIZE, function(err, tokens){
+		prod.generateToken(parseInt(req.params.SIZE,10), function(err, tokens){
 			if(err){
 				res.send(err);
 				throw err;
