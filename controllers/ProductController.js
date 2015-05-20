@@ -17,7 +17,7 @@ var uuid = require('node-uuid');
 
 var crypto = require('crypto');
 var algorithm = 'aes-256-gcm';
-var password = 'thisispassword';
+var password = '12345678901234567890123456789012';
 
 // method to create/register developer
 /*
@@ -97,15 +97,16 @@ exports.getGeneratedTokens = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
-		var text = prod._id;
+		var text = req.params.PRODID;
 		var tokens = [];
 		var size = req.params.SIZE;		
 		// initialization vector
 		var init_vector = "";
 		var cipher = null;
 		var temp = "";
-		for(int i = 0; i<size; i++){
-			init_vector = uuid.v4();
+		for(var i = 0; i<size; i++){
+			//init_vector = uuid.v4();
+			init_vector = "123456789012";
 			cipher = crypto.createCipheriv(algorithm, password, init_vector);
 			var encrypted = cipher.update(text, 'utf8', 'hex');
 			encrypted += cipher.final('hex');
