@@ -7,6 +7,7 @@ var developerSchema = new Schema({
 	_username: {type: String, required: true, unique: true},
 	name: {type: String, required: true},
 	password: String,
+	email: {type: String, required:true},
 	description: String,
 	website: String,
 	date_created: Date,

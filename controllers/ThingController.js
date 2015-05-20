@@ -49,7 +49,7 @@ exports.registerThing = function(req,res,next){
 			new_thing.type = prod._name;
 			new_thing.category = prod.category._name;
 	
-			new_thing.save(function(err){
+			new_thing.save(function(err, thing){
     			if(err){
 					res.send(err);
 					throw err;
@@ -59,13 +59,17 @@ exports.registerThing = function(req,res,next){
 						res.send(err);
 						throw err;
 					}
-					user.things.push(new_thing);	
+					user.things.push(thing);	
     				user.save(function(err){
     					if(err){
 							res.send(err);
 							throw err;
 						}
-						res.send("New thing created: "+new_thing.name+" by "+user._username);		
+						var out = {
+							message: "New thing created: "+thing.name+" by "+user._username,
+							id: thing._id
+						};
+						res.send(out);		
     					next();
     				});
     			});

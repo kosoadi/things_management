@@ -16,13 +16,13 @@ var propSchema = new Schema({
 });
 
 var productSchema = new Schema({
-	_creator: {type: Schema.Types.ObjectId, ref:'Developer'},
+	_creator: {type: Schema.Types.ObjectId, ref:'Developer', required: true},
 	_name: {type: String,required: true, unique: true},
-	category: {type: Schema.Types.ObjectId, ref:'Category'},
+	category: {type: Schema.Types.ObjectId, ref:'Category', required: true},
 	properties: [propSchema],
 	description: String,
 	image: String,
-	token: {type:String, default:function genUUID(){uuid.v4()}},
+	token: {type:String, default:uuid.v4(), required: true},
 	date_created: Date,
 	date_updated: Date
 });
@@ -53,7 +53,7 @@ productSchema.methods.validateToken = function (token, next){
 		return next();
 	} else{
 		var err = new Error("Invalid token");
-		throw err;
+		return next(err);
 	} 
 };
 
@@ -65,13 +65,15 @@ productSchema.methods.generateToken = function (size, next){
 		var text = this.token.split("-");
 		var tokens = [];		
 		var toEnc = "";
+		var encrypted = null;
 		// initialization vector
 		var init_vector = [];
 		var cipher = crypto.createCipher(algorithm, password);
-		for( i = 0; i<size; i++){
+		for(var i = 0; i<size; i++){
+			encrypted = null;
 			init_vector = uuid.v4().split("-"); // size:5 // e.g. 110ec58a-a0f2-4ac4-8393-c866d813b8d1
 			toEnc = ""+init_vector[0]+text[0]+init_vector[1]+text[1]+init_vector[2]+text[2]+init_vector[3]+text[3]+init_vector[4]+text[4];
-			var encrypted = cipher.update(toEnc, 'utf8', 'hex');
+			encrypted = cipher.update(toEnc, 'utf8', 'hex');
 			encrypted += cipher.final('hex');
 			tokens.push(encrypted); // 56 characters 
 		}

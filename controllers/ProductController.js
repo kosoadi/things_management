@@ -37,7 +37,6 @@ exports.registerProduct = function(req,res,next){
 			_name: req.body.name,		
 			category: req.body.categoryid, 
 			description: req.body.description,
-			token:uuid.v4(),
 			properties:[]
 		});
 			
@@ -45,18 +44,22 @@ exports.registerProduct = function(req,res,next){
 			new_product.image = "SET DEFAULT IMAGE URI";
 		} else new_product.image = req.body.image;
 
-    	new_product.save(function(err){
+    	new_product.save(function(err, prod){
     		if(err){
 				res.send(err);
 				throw err;
 			}
-			dev.products.push(new_product);	
+			dev.products.push(prod);	
     		dev.save(function(err){
     			if(err){
 					res.send(err);
 					throw err;
 				}
-				res.send("New product created: "+new_product._name+" by "+dev.name);		
+				var out = {
+					message: "New product created: "+prod._name+" by "+dev.name,
+					token: prod.token
+				};
+				res.send(out);		
     		});
     	});
 	});
@@ -84,7 +87,7 @@ exports.getDeveloperProduct = function(req, res, next){
 	param: DEVID, PRODID, SIZE
 	body: no
 */
-exports.getGeneratedTokens = function(req, res, next){
+exports.getThingTokens = function(req, res, next){
 	Product.findOne({_creator: req.params.DEVID, _id:req.params.PRODID}, function(err, prod) {
 		if (err){ 
 			res.send(err);
@@ -101,6 +104,30 @@ exports.getGeneratedTokens = function(req, res, next){
 	});
 	next();	
 }
+
+// method to generate 1 token of a product of a developer
+/*
+	param: :PRODTOKEN
+	body: no
+*/
+exports.getOneToken = function(req, res, next){
+	Product.findOne({token: req.params.PRODTOKEN}, function(err, prod) {
+		if (err){ 
+			res.send(err);
+			throw err;
+		}
+		prod.generateToken(1, function(err, token){
+			if(err){
+				res.send(err);
+				throw err;
+			}
+			res.send(token);
+			next();
+		});
+	});
+	next();	
+}
+
 
 // method to get all products by a developer
 /*
