@@ -27,6 +27,7 @@ exports.registerDeveloper = function(req,res,next){
 		name: req.body.name,
 		password: req.body.password,
 		description: req.body.description,
+		email: req.body.email,
 		status: true,
 		products: []
 	});
