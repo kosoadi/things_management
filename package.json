@@ -31,9 +31,12 @@
     "fs": "0.0.2",
     "mongodb": "^1.4.33",
     "mongoose": "^3.8.24",
+    "mongoose-function": "^0.1.0",
     "mongoose-relationship": "^0.1.4",
     "mqtt": "^1.1.0",
+    "node-rest-client": "^1.5.1",
     "node-uuid": "^1.4.3",
+    "request": "^2.55.0",
     "restify": "^3.0.1"
   },
   "scripts": {

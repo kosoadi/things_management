@@ -1,4 +1,5 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
+require('mongoose-function')(mongoose);
 var Schema = mongoose.Schema;
 var uuid = require('node-uuid');
 var crypto = require('crypto');
@@ -7,13 +8,27 @@ var password = '12345678901234567890123456789012';
 
 var propSchema = new Schema({
 	name: {type: String, required: true, unique: true}, 
-	access: {type: Boolean, required: true}, 
-	control: {type: Boolean, required: true}, 
-	valueType: {type: String, required: true}, //"STR","NUM", "BOOL", "ARR", "OBJ", "BUFF", "DATE"
+	access: {state:{type: Boolean, required: true}, func: Function}, 
+	control: {state:{type: Boolean, required: true}, func: Function}, 
+	valueType: {type: String, required: true}, //"STR","INT","DBL", "BOOL", "ARR", "OBJ", "BUFF", "DATE"
 	description: {type: String, required: true},
 	min: {type: Schema.Types.Mixed, required: true},
 	max: {type: Schema.Types.Mixed, required: true}
 });
+/*
+function(topic, data){
+	var mqtt = require('mqtt');
+	var client = mqtt.connect('BROKER_ADDRESS');
+	client.on('connect', function(){
+		client.publish(topic, data);
+		client.end();
+	});
+}
+
+function(data){
+	
+}
+*/
 
 var productSchema = new Schema({
 	_creator: {type: Schema.Types.ObjectId, ref:'Developer', required: true},
@@ -24,7 +39,9 @@ var productSchema = new Schema({
 	image: String,
 	token: {type:String, default:uuid.v4(), required: true},
 	date_created: Date,
-	date_updated: Date
+	date_updated: Date,
+	token_auth: {func: Function},
+	discover_thing: {func: Function}
 });
 
 productSchema.methods.checkPropertyExists = function(propName, cb){
@@ -36,25 +53,45 @@ productSchema.methods.checkPropertyExists = function(propName, cb){
 	cb();
 };
 
+productSchema.methods.discoverThing = function(next){
+	if(!(this.discover_thing typeof 'undefined')){
+		this.discover_thing(function(err, data){
+			if(err){
+				return next(err);
+			}
+			return next(false, data);
+		});
+	} else return next(new Error("function does not exist"), false);
+};
+
 productSchema.methods.validateToken = function (token, next){
-	var decipher = crypto.createDecipher(algorithm,password)
-  	var dec = decipher.update(token,'hex','utf8')
-  	dec += decipher.final('utf8');
+	if(!(this.token_auth typeof 'undefined')){
+		this.token_auth(this.token, function(err){
+			if(err){
+				return next(err);
+			}
+			return next();
+		});
+	}else{
+		var decipher = crypto.createDecipher(algorithm,password)
+  		var dec = decipher.update(token,'hex','utf8')
+  		dec += decipher.final('utf8');
   	
-  	var first = dec.substring(8, 16);
-	var mid1 = dec.substring(20, 24);
-	var mid2 = dec.substring(28, 32);
-	var mid3 = dec.substring(36, 40);
-	var end = dec.substring(52, 64);
+  		var first = dec.substring(8, 16);
+		var mid1 = dec.substring(20, 24);
+		var mid2 = dec.substring(28, 32);
+		var mid3 = dec.substring(36, 40);
+		var end = dec.substring(52, 64);
 
-	var text = first+"-"+mid1+"-"+mid2+"-"+mid3+"-"+end;
+		var text = first+"-"+mid1+"-"+mid2+"-"+mid3+"-"+end;
 
-	if(this.token == text){
-		return next();
-	} else{
-		var err = new Error("Invalid token");
-		return next(err);
-	} 
+		if(this.token == text){
+			return next();
+		} else{
+			var err = new Error("Invalid token");
+			return next(err);
+		} 
+	}
 };
 
 productSchema.methods.generateToken = function (size, next){
