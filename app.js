@@ -63,6 +63,8 @@ server.put('/sot/developer/:DEVID/product/:PRODID', controllers.ProductControlle
 server.del('/sot/developer/:DEVID/product/:PRODID', controllers.ProductController.deleteProduct);
 server.put('/sot/developer/:DEVID/product/:PRODID/property', controllers.ProductController.addProductProperty);
 server.del('/sot/developer/:DEVID/product/:PRODID/property', controllers.ProductController.deleteProductProperty);
+server.get('/sot/developer/:DEVID/product/:PRODID/discover', controllers.ProductController.discoverThings);
+
 
 //token
 server.get('/sot/developer/:DEVID/product/:PRODID/gentoken/:SIZE', controllers.ProductController.getThingTokens);
