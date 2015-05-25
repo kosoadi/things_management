@@ -54,7 +54,7 @@ productSchema.methods.checkPropertyExists = function(propName, cb){
 };
 
 productSchema.methods.discoverThing = function(next){
-	if(!(this.discover_thing typeof 'undefined')){
+	if(!(typeof this.discover_thing == 'undefined')){
 		this.discover_thing(function(err, data){
 			if(err){
 				return next(err);
@@ -65,7 +65,7 @@ productSchema.methods.discoverThing = function(next){
 };
 
 productSchema.methods.validateToken = function (token, next){
-	if(!(this.token_auth typeof 'undefined')){
+	if(!(typeof this.token_auth == 'undefined')){
 		this.token_auth(this.token, function(err){
 			if(err){
 				return next(err);

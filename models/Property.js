@@ -40,7 +40,7 @@ propertySchema.methods.runAccess = function (next){
 	if(this.access.state == false){
 		return next(new Error("access forbidden"));
 	}
-	if(this.access.func typeof 'undefined'){
+	if(typeof this.access.func == 'undefined'){
 		return next(new Error("function undefined"));
 	}
 	this.access.func(function(err, data){
@@ -55,7 +55,7 @@ propertySchema.methods.runControl = function (data, next){
 	if(this.control.state == false){
 		return next(new Error("control forbidden"));
 	}
-	if(this.control.func typeof 'undefined'){
+	if(typeof this.control.func == 'undefined'){
 		return next(new Error("function undefined"));
 	}
 	this.control.func(function(err, result){
