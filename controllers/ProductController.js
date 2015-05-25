@@ -44,6 +44,14 @@ exports.registerProduct = function(req,res,next){
 			new_product.image = "SET DEFAULT IMAGE URI";
 		} else new_product.image = req.body.image;
 
+		if(req.body.hasOwnProperty('token_auth')){
+			new_product.token_auth = req.body.token_auth;
+		};
+
+		if(req.body.hasOwnProperty('discover_thing')){
+			new_product.discover_thing = req.body.discover_thing;
+		};
+
     	new_product.save(function(err, prod){
     		if(err){
 				res.send(err);
@@ -276,14 +284,22 @@ exports.addProductProperty = function(req, res, next){
 		var name = temp.toLowerCase();
 		var prop = {
 			name:name, 
-			access: req.body.access, 
-			control: req.body.control, 
+			access: {state:req.body.access.state}, 
+			control: {state:req.body.control.state}, 
 			valueType: req.body.valueType,
 			description: req.body.description,
 			min: req.body.min,
 			max: req.body.max
 		};
 		
+		if(req.body.access.hasOwnProperty('func')){
+			new_product.access.func = req.body.access.func;
+		};
+
+		if(req.body.control.hasOwnProperty('func')){
+			new_product.control.func = req.body.control.func;
+		};
+
 		prod.checkPropertyExists(prop.name, function(err1){
 			if(err1){
 				res.send(err1);
@@ -339,6 +355,27 @@ exports.deleteProductProperty = function(req, res, next){
 			res.send(new_err2);
 			throw new_err2;
 		}
+	});
+	next();
+}
+
+// function discover thing(s)
+// return array of {id: String, name: String}
+exports.discoverThings = function(req, res, next){
+	Product.findOne( {_creator:req.params.DEVID, _id:req.params.PRODID},
+	function(err, prod) {
+		if (err){ 
+			res.send(err);
+			throw err;
+		}
+		prod.discoverThing(function(err, data){
+			if(err){
+				res.send(err);
+				throw err;		
+			}
+			res.send(data);
+			next();
+		});
 	});
 	next();
 }

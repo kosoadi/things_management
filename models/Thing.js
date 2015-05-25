@@ -16,7 +16,6 @@ var thingSchema = new Schema({
 	type: String,
 	category: String,
 	location: String,
-	endpoint: String,
 	token: {type: String, required: true},
 	date_created: Date,
 	date_updated: Date,

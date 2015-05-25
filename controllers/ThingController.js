@@ -29,8 +29,7 @@ exports.registerThing = function(req,res,next){
 	var new_thing = new Thing({
 		_owner: req.params.USERID,
 		name: req.body.name,
-		location: req.body.location,
-		endpoint: req.body.endpoint
+		location: req.body.location
 	});
 
 	Product

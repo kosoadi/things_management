@@ -15,20 +15,6 @@ var propSchema = new Schema({
 	min: {type: Schema.Types.Mixed, required: true},
 	max: {type: Schema.Types.Mixed, required: true}
 });
-/*
-function(topic, data){
-	var mqtt = require('mqtt');
-	var client = mqtt.connect('BROKER_ADDRESS');
-	client.on('connect', function(){
-		client.publish(topic, data);
-		client.end();
-	});
-}
-
-function(data){
-	
-}
-*/
 
 var productSchema = new Schema({
 	_creator: {type: Schema.Types.ObjectId, ref:'Developer', required: true},
@@ -54,18 +40,18 @@ productSchema.methods.checkPropertyExists = function(propName, cb){
 };
 
 productSchema.methods.discoverThing = function(next){
-	if(!(typeof this.discover_thing == 'undefined')){
+	if(typeof this.discover_thing != 'undefined'){
 		this.discover_thing(function(err, data){
 			if(err){
 				return next(err);
 			}
 			return next(false, data);
 		});
-	} else return next(new Error("function does not exist"), false);
+	} else return next(new Error("function does not exist"), []);
 };
 
 productSchema.methods.validateToken = function (token, next){
-	if(!(typeof this.token_auth == 'undefined')){
+	if(typeof this.token_auth != 'undefined'){
 		this.token_auth(this.token, function(err){
 			if(err){
 				return next(err);

@@ -31,33 +31,27 @@ exports.registerProperty = function(req,res,next){
 			res.send(err);
 			throw err;
 		}
-		//for(var i=0; i<properties.length; i++){
-			//var temp = properties[i].name.replace(/\s/g,'');
-			//var name = temp.toLowerCase();
-			//new_property = new Property({
-			//	_thingid: thingid,
-			//	_name: name,
-			//	access: properties[i].access,
-			//	control: properties[i].control,
-			//	valueType: properties[i].valueType,
-			//	description: properties[i].description,
-			//	min: properties[i].min,
-			//	max: properties[i].max
-			//});
-			
-			var temp = req.body.name.replace(/\s/g,'');
-                        var name = temp.toLowerCase();
-                        new_property = new Property({
-                                _thingid: thingid,
-                                _name: name,
-                                access: req.body.access,
-                                control: req.body.control,
-                                valueType: req.body.valueType,
-                                description: req.body.description,
-                                min: req.body.min,
-                                max: req.body.max
-                        });
+		var temp = req.body.name.replace(/\s/g,'');
+        var name = temp.toLowerCase();
+        new_property = new Property({
+            _thingid: thingid,
+            _name: name,
+            access: {state:req.body.access},
+            control: {state:req.body.control},
+            valueType: req.body.valueType,
+            description: req.body.description,
+            min: req.body.min,
+            max: req.body.max
+        });
 		
+		if(req.body.access.hasOwnProperty('func')){
+			new_property.access.func = req.body.access.func;
+		};
+
+		if(req.body.control.hasOwnProperty('func')){
+			new_property.control.func = req.body.control.func;
+		};
+
 			new_property.save(function(err, prop){
 				if(err){
 					res.send(err);
