@@ -184,3 +184,23 @@ exports.deleteThing = function(req, res, next){
 	});
 	next();
 }
+
+// method to request accept
+/*
+	params: THINGTOKEN
+	body: no
+*/
+exports.requestAccess = function(req, res, next){
+	Thing.findOne({token: req.params.THINGTOKEN}, function(err, thing){
+		if(err){
+			res.send(err);
+			throw err;
+		}
+		var out = {
+			user: thing._owner,
+			thing: thing._id
+		};
+		res.send(out);
+	});
+	next();	
+}

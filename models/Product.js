@@ -7,7 +7,7 @@ var algorithm = 'aes-256-ctr';
 var password = '12345678901234567890123456789012';
 
 var propSchema = new Schema({
-	name: {type: String, required: true, unique: true}, 
+	name: {type: String, required: true}, 
 	access: {state:{type: Boolean, required: true}, func: Function}, 
 	control: {state:{type: Boolean, required: true}, func: Function}, 
 	valueType: {type: String, required: true}, //"STR","INT","DBL", "BOOL", "ARR", "OBJ", "BUFF", "DATE"
@@ -26,8 +26,8 @@ var productSchema = new Schema({
 	token: {type:String, default:uuid.v4(), required: true},
 	date_created: Date,
 	date_updated: Date,
-	token_auth: {func: Function},
-	discover_thing: {func: Function}
+	token_auth: Function,
+	discover_thing: Function
 });
 
 productSchema.methods.checkPropertyExists = function(propName, cb){

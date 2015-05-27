@@ -282,6 +282,13 @@ exports.addProductProperty = function(req, res, next){
 		}
 		var temp = req.body.name.replace(/\s/g,'');
 		var name = temp.toLowerCase();
+		for(var i = 0; i < prod.properties.length; i++){
+			if(prod.properties[i].name == name ){
+				var error = new Error("property name "+name+"already exists");
+				res.send(error);
+				throw error;		
+			}
+		}
 		var prop = {
 			name:name, 
 			access: {state:req.body.access.state}, 
@@ -362,7 +369,7 @@ exports.deleteProductProperty = function(req, res, next){
 // function discover thing(s)
 // return array of {id: String, name: String}
 exports.discoverThings = function(req, res, next){
-	Product.findOne( {_creator:req.params.DEVID, _id:req.params.PRODID},
+	Product.findOne( {_id:req.params.PRODID},
 	function(err, prod) {
 		if (err){ 
 			res.send(err);
@@ -376,6 +383,29 @@ exports.discoverThings = function(req, res, next){
 			res.send(data);
 			next();
 		});
+	});
+	next();
+}
+
+exports.validateTokenExt = function(req, res, next){
+	Product.findOne( {_id:req.params.PRODID},
+	function(err, prod) {
+		if (err){ 
+			res.send(err);
+			throw err;
+		}
+		if(typeof prod.token_auth != 'undefined'){
+			prod.validateToken(req.body.token, function(err){
+				if(err){
+					res.send(err);
+					throw err;
+				}
+				res.send("Token valid");
+			});
+		}else{
+			res.send(new Error("invalid method"));
+			throw (new Error("invalid method"));
+		}
 	});
 	next();
 }
