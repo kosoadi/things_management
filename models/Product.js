@@ -39,9 +39,9 @@ productSchema.methods.checkPropertyExists = function(propName, cb){
 	cb();
 };
 
-productSchema.methods.discoverThing = function(next){
+productSchema.methods.discoverThing = function(token, next){
 	if(typeof this.discover_thing != 'undefined'){
-		this.discover_thing(function(err, data){
+		this.discover_thing(token, function(err, data){
 			if(err){
 				return next(err);
 			}
@@ -52,7 +52,7 @@ productSchema.methods.discoverThing = function(next){
 
 productSchema.methods.validateToken = function (token, next){
 	if(typeof this.token_auth != 'undefined'){
-		this.token_auth(this.token, function(err){
+		this.token_auth(token, function(err){
 			if(err){
 				return next(err);
 			}
