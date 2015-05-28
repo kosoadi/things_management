@@ -14,6 +14,7 @@ var propertySchema = new Schema({
 	max: Schema.Types.Mixed,
 	date_created: Date,
 	date_updated: Date,
+	topic: {setter:String, getter:String},
 	shares: [{
 		postid: String,
 		level: Number, // 0:share info; 1:share access; 2:share control; 3:access&control 

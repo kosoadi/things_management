@@ -41,7 +41,11 @@ exports.registerProperty = function(req,res,next){
             valueType: req.body.valueType,
             description: req.body.description,
             min: req.body.min,
-            max: req.body.max
+            max: req.body.max,
+         	topic:{ 
+         		setter:'sot/'+userid+'/'+thing.category+'/'+thingid+'/'+name+'/ctl',
+         		getter:'sot/'+userid+'/'+thing.category+'/'+thingid+'/'+name+'/acc'
+         	}
         });
 		
 		if(req.body.access.hasOwnProperty('func')){
