@@ -8,7 +8,7 @@ var propertySchema = new Schema({
 	_name: {type: String, required: true}, // No space allowed
 	access: {state:{type: Boolean, required: true}, func: Function}, 
 	control: {state:{type: Boolean, required: true}, func: Function},
-	valueType: String, // STR | INT | DBL | BOOL | ARR | OBJ
+	valueType: String, // STR | INT | DBL | BOOL | ARR 
 	description: String,
 	min: Schema.Types.Mixed,
 	max: Schema.Types.Mixed,

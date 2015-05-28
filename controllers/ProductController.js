@@ -32,6 +32,11 @@ exports.registerProduct = function(req,res,next){
 			res.send(err);
 			throw err;
 		}
+		if(!dev){
+			var error = new Error("Developer not found");
+			res.send(error);
+			throw error;
+		}
 		var new_product = new Product({
 			_creator: dev._id,
 			_name: req.body.name,		
@@ -105,6 +110,11 @@ exports.getThingTokens = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
+		if(!prod){
+			var error = new Error("Product or Developer not found");
+			res.send(error);
+			throw error;
+		}
 		prod.generateToken(parseInt(req.params.SIZE,10), function(err, tokens){
 			if(err){
 				res.send(err);
@@ -127,6 +137,11 @@ exports.getOneToken = function(req, res, next){
 		if (err){ 
 			res.send(err);
 			throw err;
+		}
+		if(!prod){
+			var error = new Error("Invalid Token");
+			res.send(error);
+			throw error;
 		}
 		prod.generateToken(1, function(err, token){
 			if(err){
@@ -379,6 +394,11 @@ exports.discoverThings = function(req, res, next){
 			res.send(err);
 			throw err;
 		}
+		if(!prod){ 
+			var error = new Error("Product not found");
+			res.send(error);
+			throw error;
+		}
 		prod.discoverThing(function(err, data){
 			if(err){
 				res.send(err);
@@ -397,6 +417,11 @@ exports.validateTokenExt = function(req, res, next){
 		if (err){ 
 			res.send(err);
 			throw err;
+		}
+		if(!prod){ 
+			var error = new Error("Product not found");
+			res.send(error);
+			throw error;
 		}
 		if(typeof prod.token_auth != 'undefined'){
 			prod.validateToken(req.body.token, function(err){
