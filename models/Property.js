@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 require('mongoose-function')(mongoose);
 var Schema = mongoose.Schema;
-
+var mqtt = require('mqtt');
 
 var propertySchema = new Schema({
 	_thingid: {type: Schema.Types.ObjectId, ref:'Thing'},
@@ -38,33 +38,59 @@ prop.access.func(data, function(result, err){
 propertySchema.index({_thingid: 1, _name: 1}, {unique: true});
 
 propertySchema.methods.runAccess = function (next){
-	if(this.access.state == false){
-		return next(new Error("access forbidden"));
-	}
-	if(typeof this.access.func == 'undefined'){
-		return next(new Error("function undefined"));
-	}
-	this.access.func(function(err, data){
-		if(err){
-			return next(err, {});
+	if(this.access.state == true){
+		if(typeof this.access.func != 'undefined'){
+			this.access.func(function(err, data){
+				return next(err, data);
+			});
 		}
-		return (false, data);
-	});
+		var client = mqtt.connect("LINK uri mosquitto");
+		client.on('connect', function () {
+  			client.subscribe(this.topic.getter);
+		});
+		client.on('message', function (topic, message) {
+  			client.end();
+			return next(null, message.toString());
+		});
+	}else{
+		var error = new Error("Invalid command");
+		return next(error, null);
+		throw error;
+	}
 };
 
-propertySchema.methods.runControl = function (data, next){
-	if(this.control.state == false){
-		return next(new Error("control forbidden"));
-	}
-	if(typeof this.control.func == 'undefined'){
-		return next(new Error("function undefined"));
-	}
-	this.control.func(function(err, result){
-		if(err){
-			return next(err, {});
+propertySchema.methods.runControl = function (input, next){
+	if(this.control.state == true){
+		if(this.valueType == "INT"){
+			input = parseInt(input);
+			if(this.min>input || input>this.max){
+				var error = new Error("Invalid input");
+				return next(error, null);
+				throw error; 			
+			}
+		}else if(this.valueType == "DBL"){
+			if(this.min>input || input>this.max){
+				var error = new Error("Invalid input");
+				return next(error, null);
+				throw error; 			
+			}
 		}
-		return (false, result);
-	});
+		if(typeof this.control.func != 'undefined'){
+			this.control.func(input, function(err, data){
+				return next(err, data);
+			});
+		}
+		var client = mqtt.connect("LINK uri mosquitto");
+		client.on('connect', function () {
+  			client.publish(this.topic.setter, input+"");
+  			client.end();
+  			return next(null, "Published topic:"+ this.topic.setter+":"+input);
+		});
+	}else{
+		var error = new Error("Invalid command");
+		return next(error, null);
+		throw error;
+	}
 };
 
 propertySchema.pre('save', function(next){

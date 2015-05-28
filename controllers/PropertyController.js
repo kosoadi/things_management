@@ -12,7 +12,6 @@ var Developer = require("../models/Developer");
 var Product = require("../models/Product");
 var User = require("../models/User");
 var ObjectId = mongoose.Types.ObjectId;
-var mqtt = require('mqtt');
 
 // method to create/register a property
 /*
@@ -225,30 +224,13 @@ exports.getPropertyValue = function(req, res, next){
 				res.send(error);
 				throw error;
 			}
-
-			if(prop.access.state == true){
-				if(typeof prop.access.func != 'undefined'){
-					prop.access.func(function(err, data){
-						if(err){
-							res.send(err);
-							throw err;
-						}
-						res.send(data); next();
-					});
+			prop.runAccess(function(err, data){
+				if(err){
+					res.send(err);
+					throw err;
 				}
-				var client = mqtt.connect("LINK uri mosquitto");
-				client.on('connect', function () {
-  					client.subscribe(thing.topic.getter);
-				});
-				client.on('message', function (topic, message) {
-  					client.end();
-					res.send(message.toString());
-				});
-			}else{
-				var error = new Error("Invalid command");
-				res.send(error);
-				throw error;
-			} 		
+				res.send(data);
+			}); 		
 		});
 	});
 	next();
@@ -287,43 +269,13 @@ exports.setPropertyValue = function(req, res, next){
 				res.send(error);
 				throw error;
 			}
-			if(prop.control.state == true){
-				if(prop.valueType == "INT"){
-					input = parseInt(input);
-					if(prop.min<input && input<prop.max){
-						var error = new Error("Invalid input");
-						res.send(error);
-						throw error; next();			
-					}
-				}else if(prop.valueType == "DBL"){
-					if(prop.min<input && input<prop.max){
-						var error = new Error("Invalid input");
-						res.send(error);
-						throw error; next();			
-					}
+			prop.runControl(input, function(err, data){
+				if(err){
+					res.send(err);
+					throw err;
 				}
-				if(typeof prop.control.func != 'undefined'){
-					prop.control.func(input, function(err, data){
-						if(err){
-							res.send(err);
-							throw err;
-						}
-						res.send(data);
-						next();
-					});
-				}
-
-				var client = mqtt.connect("LINK uri mosquitto");
-				client.on('connect', function () {
-  					client.publish(thing.topic.setter, input+"");
-  					client.end();
-  					res.send("Published topic:"+ thing.topic.setter+":"+input);
-				});
-			}else{
-				var error = new Error("Invalid command");
-				res.send(error);
-				throw error;
-			}		
+				res.send(data);
+			});		
 		});
 	});
 	next();
