@@ -10,6 +10,7 @@ var Product = require('./Product');
 //autoIncrement.initialize(connection);
 
 var thingSchema = new Schema({
+	_id: {type:String, default:mongoose.Types.ObjectId().toString(), unique:true},
 	_owner: {type: Schema.Types.ObjectId, ref:'User', required: true},
 	_product: {type: Schema.Types.ObjectId, ref:'Product', required: true},
 	name: {type: String, required: true},

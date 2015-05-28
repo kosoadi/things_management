@@ -12,6 +12,9 @@ var Product = require("../models/Product");
 var Property = require("../models/Property");
 var User = require("../models/User");
 var ObjectId = mongoose.Types.ObjectId;
+var crypto = require('crypto');
+var algorithm = 'aes-256-ctr';
+var password = '12345678901234567890123456789012';
 
 // method to create/register thing
 /*
@@ -20,62 +23,78 @@ var ObjectId = mongoose.Types.ObjectId;
 	{
 		name: String,
 		location: String,
-		endpoint: String,
-		token: String,
-		prodid: ObjectId of Product
+		token: String
 	}
 */
 exports.registerThing = function(req,res,next){
 	var new_thing = new Thing({
 		_owner: req.params.USERID,
-		name: req.body.name,
-		location: req.body.location
+		name: req.body.name
 	});
+	
+	if(!req.body.hasOwnProperty('location')){
+		new_thing.location = "";
+	} else new_thing.location = req.body.location;
 
+	var decipher = crypto.createDecipher(algorithm,password)
+  	var dec = decipher.update(req.body.token,'hex','utf8')
+  	dec += decipher.final('utf8');
+
+  	var first = dec.substring(8, 16);
+	var mid1 = dec.substring(20, 24);
+	var mid2 = dec.substring(28, 32);
+	var mid3 = dec.substring(36, 40);
+	var end = dec.substring(52, 64);
+	var text = first+"-"+mid1+"-"+mid2+"-"+mid3+"-"+end;
+	
 	Product
-	.findOne({ _id: req.body.prodid}, function(err, prod){
+	.findOne({ token: text}, function(err, prod){
 		if(err){
-			res.send("Product/Type does not exist");
+			res.send(err);
 			throw err;
 		}
-		prod.validateToken(req.body.token, function(err){
-			if(err){
+		if(!prod){
+			var error = new Error("Invalid Token");
+			throw error;
+		}
+		new_thing.token = req.body.token;	
+		new_thing._product = prod._id;
+		new_thing.type = prod._name;
+		new_thing.category = prod.category._name;
+		new_thing.save(function(err, thing){
+    		if(err){
 				res.send(err);
 				throw err;
 			}
-			new_thing.token = req.body.token;	
-			new_thing._product = prod._id;
-			new_thing.type = prod._name;
-			new_thing.category = prod.category._name;
-	
-			new_thing.save(function(err, thing){
+    		User.findOne({_id: new_thing._owner}, function(err, user){
     			if(err){
 					res.send(err);
 					throw err;
 				}
-    			User.findOne({_id: new_thing._owner}, function(err, user){
+				if(!user){
+					var error = new Error("User not found");
+					res.send(error);
+					throw error;
+				}
+				user.things.push(thing);	
+    			user.save(function(err){
     				if(err){
 						res.send(err);
 						throw err;
 					}
-					user.things.push(thing);	
-    				user.save(function(err){
-    					if(err){
-							res.send(err);
-							throw err;
-						}
-						var out = {
-							message: "New thing created: "+thing.name+" by "+user._username,
-							id: thing._id
-						};
-						res.send(out);		
-    					next();
-    				});
+					var out = {
+						message: "New thing created: "+thing.name+" by "+user._username,
+						id: thing._id
+					};
+					res.send(out);		
+    				next();
     			});
     		});
-		});
+    	});
+		
 	});
 }
+
 
 // method to get a thing of a user
 /*

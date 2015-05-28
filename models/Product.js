@@ -27,8 +27,13 @@ var productSchema = new Schema({
 	date_created: Date,
 	date_updated: Date,
 	token_auth: Function,
-	discover_thing: Function
+	discover_thing: Function,
+	scheme: {type:Number, default:4, required: true} // 1 or 2 or 3 or 4
 });
+
+/*
+	if scheme != 4, then hide all 
+*/
 
 productSchema.methods.checkPropertyExists = function(propName, cb){
 	for(var i=0; i<this.properties.length; i++){

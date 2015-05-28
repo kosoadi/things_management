@@ -86,7 +86,7 @@ server.put('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.Pr
 server.del('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.PropertyController.deleteProperty);
 
 server.get('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME/acc', controllers.PropertyController.getPropertyValue);
-server.put('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME/ctl', controllers.PropertyController.getPropertyValue);
+server.put('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME/ctl', controllers.PropertyController.setPropertyValue);
 
 server.listen(4242, function () {
   console.log('%s listening at %s', server.name, server.url);
