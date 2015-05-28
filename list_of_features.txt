@@ -1,0 +1,20 @@
+CRUD User 4
+	Check User Exists 1
+CRUD Thing 4
+	Get n Thing's Tokens 1
+	Get 1 Thing's Token 1
+CRUD Property 4
+	Set Property value 1
+	Get Property value 1
+CRUD Developer 4
+CRUD Product 4
+	Add Product's Property 1
+	Delete Product Property 1
+CRUD Category 4
+	Get All Things by Category 1
+	Get All Products by Category 1
+
+	6x4 = 24
+	1x9 = 9
+	--------+
+		= 33

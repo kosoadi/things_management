@@ -47,7 +47,13 @@ exports.checkUser = function(req,res,next){
 			res.send(err);
 			throw err;
 		}
-		res.send(user);
+		if (!user){ 
+			var error = new Error("user not found");
+			res.send(error);
+			throw error;
+		}
+		var out = {user: user._id}; 
+		res.send(out);
 	});
 	next();
 }
