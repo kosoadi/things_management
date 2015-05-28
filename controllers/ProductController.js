@@ -52,6 +52,10 @@ exports.registerProduct = function(req,res,next){
 			new_product.discover_thing = req.body.discover_thing;
 		};
 
+		if(req.body.hasOwnProperty('scheme')){
+			new_product.scheme = req.body.scheme;
+		};
+
     	new_product.save(function(err, prod){
     		if(err){
 				res.send(err);
