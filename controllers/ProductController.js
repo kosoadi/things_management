@@ -319,11 +319,11 @@ exports.addProductProperty = function(req, res, next){
 		};
 		
 		if(req.body.access.hasOwnProperty('func')){
-			new_product.access.func = req.body.access.func;
+			prop.access.func = req.body.access.func;
 		};
 
 		if(req.body.control.hasOwnProperty('func')){
-			new_product.control.func = req.body.control.func;
+			prop.control.func = req.body.control.func;
 		};
 
 		prod.checkPropertyExists(prop.name, function(err1){
