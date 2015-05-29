@@ -69,6 +69,7 @@ propertySchema.methods.runControl = function (input, next){
 				throw error; 			
 			}
 		}else if(this.valueType == "DBL"){
+			input = parseFloat(input);
 			if(this.min>input || input>this.max){
 				var error = new Error("Invalid input");
 				return next(error, null);
