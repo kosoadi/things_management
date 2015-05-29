@@ -15,7 +15,7 @@ function runAllAccess(callback){
 				prop.runAccess(function(err,data){
 					if(err){
 						client.on('connect', function () {
-  							client.publish(this.topic.getter, data+"");
+  							client.publish(this.topic.getter, err+"");
 						});
 					}
 					client.on('connect', function () {
