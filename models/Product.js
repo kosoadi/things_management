@@ -18,12 +18,12 @@ var propSchema = new Schema({
 
 var productSchema = new Schema({
 	_creator: {type: Schema.Types.ObjectId, ref:'Developer', required: true},
-	_name: {type: String,required: true, unique: true},
+	_name: {type: String,required: true, unique:true},
 	category: {type: Schema.Types.ObjectId, ref:'Category', required: true},
 	properties: [propSchema],
 	description: String,
 	image: String,
-	token: {type:String, default:uuid.v4(), required: true},
+	token: {type:String,unique:true, default:uuid.v4(), required: true},
 	date_created: Date,
 	date_updated: Date,
 	token_auth: Function,

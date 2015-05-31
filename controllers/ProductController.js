@@ -16,6 +16,7 @@ var crypto = require('crypto');
 var algorithm = 'aes-256-ctr';
 var password = '12345678901234567890123456789012';
 var uuid = require('node-uuid');
+var request = require('request');
 // method to create/register developer
 /*
 	param: DEVID
@@ -42,7 +43,8 @@ exports.registerProduct = function(req,res,next){
 			_name: req.body.name,		
 			category: req.body.categoryid, 
 			description: req.body.description,
-			properties:[]
+			properties:[],
+			token: uuid.v4()
 		});
 			
 		if(!req.body.hasOwnProperty('image')){
@@ -399,7 +401,7 @@ exports.discoverThings = function(req, res, next){
 			res.send(error);
 			throw error;
 		}
-		prod.discoverThing(function(err, data){
+		prod.discoverThing(req.body.token,function(err, data){
 			if(err){
 				res.send(err);
 				throw err;		
@@ -423,8 +425,8 @@ exports.validateTokenExt = function(req, res, next){
 			res.send(error);
 			throw error;
 		}
-		if(typeof prod.token_auth != 'undefined'){
-			prod.validateToken(req.body.token, function(err){
+		if(prod.token_auth){
+			prod.token_auth(req.body.token, function(err){
 				if(err){
 					res.send(err);
 					throw err;

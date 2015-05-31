@@ -35,7 +35,51 @@ exports.registerThing = function(req,res,next){
 	if(!req.body.hasOwnProperty('location')){
 		new_thing.location = "";
 	} else new_thing.location = req.body.location;
-
+	
+	if(req.body.productid){
+		Product.findOne({ _id: req.body.productid}, function(err, prod){
+		if(err){
+			res.send(err);
+			throw err;
+		}
+		new_thing.token = req.body.token;	
+		new_thing._product = prod._id;
+		new_thing.type = prod._name;
+		new_thing.category = prod.category._name;
+		new_thing.save(function(err, thing){
+    		if(err){
+				res.send(err);
+				throw err;
+			}
+    		User.findOne({_id: new_thing._owner}, function(err, user){
+    			if(err){
+					res.send(err);
+					throw err;
+				}
+				if(!user){
+					var error = new Error("User not found");
+					res.send(error);
+					throw error;
+				}
+				user.things.push(thing);	
+    			user.save(function(err){
+    				if(err){
+						res.send(err);
+						throw err;
+					}
+					var out = {
+						message: "New thing created: "+thing.name+" by "+user.name,
+						id: thing._id
+					};
+					res.send(out);		
+    				next();
+    			});
+    		});
+    	});
+		
+	});			
+	}	
+	
 	var decipher = crypto.createDecipher(algorithm,password)
   	var dec = decipher.update(req.body.token,'hex','utf8')
   	dec += decipher.final('utf8');
@@ -83,7 +127,7 @@ exports.registerThing = function(req,res,next){
 						throw err;
 					}
 					var out = {
-						message: "New thing created: "+thing.name+" by "+user._username,
+						message: "New thing created: "+thing.name+" by "+user.name,
 						id: thing._id
 					};
 					res.send(out);		

@@ -1,0 +1,135 @@
+[
+    {
+        "date_created": "2015-05-29T08:57:54.163Z",
+        "date_updated": "2015-05-29T08:57:54.163Z",
+        "image": "SET DEFAULT IMAGE URI",
+        "_creator": "55682876ba45961a7c2c935a",
+        "_name": "Blast LED Light v3 with scheme1",
+        "category": "55682917ba45961a7c2c935b",
+        "description": "LED Light with scheme1",
+        "_id": "55682a12ba45961a7c2c935f",
+        "__v": 0,
+        "scheme": 1,
+        "token": "000f9540-ab86-42f6-9974-93d5b82e84f6",
+        "properties": []
+    },
+    {
+        "__v": 4,
+        "_creator": "55682876ba45961a7c2c935a",
+        "_id": "556829a5ba45961a7c2c935d",
+        "_name": "Blast LED Light v1",
+        "category": "55682917ba45961a7c2c935b",
+        "date_created": "2015-05-29T08:56:05.688Z",
+        "date_updated": "2015-05-29T09:06:40.465Z",
+        "image": "SET DEFAULT IMAGE URI",
+        "scheme": 4,
+        "token": "000f9540-ab86-42f6-9974-93d5b82e84f6",
+        "properties": [
+            {
+                "name": "hue",
+                "valueType": "DBL",
+                "description": "variable for hue of lighting",
+                "min": 0,
+                "max": 1,
+                "_id": "55682bb7ba45961a7c2c9360",
+                "control": {
+                    "state": true
+                },
+                "access": {
+                    "state": true
+                }
+            },
+            {
+                "name": "saturation",
+                "valueType": "DBL",
+                "description": "variable for saturation of lighting",
+                "min": 0,
+                "max": 1,
+                "_id": "55682bcaba45961a7c2c9361",
+                "control": {
+                    "state": true
+                },
+                "access": {
+                    "state": true
+                }
+            },
+            {
+                "name": "state",
+                "valueType": "BOOL",
+                "description": "variable for state on/off of lighting",
+                "min": false,
+                "max": true,
+                "_id": "55682bdfba45961a7c2c9362",
+                "control": {
+                    "state": true
+                },
+                "access": {
+                    "state": true
+                }
+            },
+            {
+                "name": "brightness",
+                "valueType": "INT",
+                "description": "variable for brightness of lighting",
+                "min": 0,
+                "max": 100,
+                "_id": "55682c20ba45961a7c2c9363",
+                "control": {
+                    "state": true
+                },
+                "access": {
+                    "state": true
+                }
+            }
+        ]
+    },
+    {
+        "__v": 2,
+        "_creator": "55682876ba45961a7c2c935a",
+        "_id": "556829dfba45961a7c2c935e",
+        "_name": "Blast LED Light v2 with TokenAuth and Discover",
+        "category": "55682917ba45961a7c2c935b",
+        "date_created": "2015-05-29T08:57:03.347Z",
+        "date_updated": "2015-05-29T09:14:50.098Z",
+        "description": "LED Light with TokenAuth and Discover",
+        "discover_thing": "function a(next){return next()}",
+        "image": "SET DEFAULT IMAGE URI",
+        "token_auth": "function a(next){return next()}",
+        "scheme": 4,
+        "token": "000f9540-ab86-42f6-9974-93d5b82e84f6",
+        "properties": [
+            {
+                "name": "brightness",
+                "valueType": "INT",
+                "description": "variable for brightness of lighting",
+                "min": 0,
+                "max": 100,
+                "_id": "55682dd46598ed5201643421",
+                "control": {
+                    "state": true,
+                    "func": "function a(next){return next()}"
+                },
+                "access": {
+                    "state": true,
+                    "func": "function a(next){return next()}"
+                }
+            },
+            {
+                "name": "state",
+                "valueType": "BOOL",
+                "description": "variable for state on/off of lighting",
+                "min": false,
+                "max": true,
+                "_id": "55682e0a6598ed5201643422",
+                "control": {
+                    "state": true,
+                    "func": "function a(next){return next()}"
+                },
+                "access": {
+                    "state": true,
+                    "func": "function a(next){return next()}"
+                }
+            }
+        ]
+    }
+]

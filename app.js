@@ -68,7 +68,7 @@ server.del('/sot/developer/:DEVID/product/:PRODID/property', controllers.Product
 server.get('/sot/developer/:DEVID/product/:PRODID/gentoken/:SIZE', controllers.ProductController.getThingTokens);
 server.get('/sot/gentoken/:PRODTOKEN', controllers.ProductController.getOneToken); //return thingtoken
 server.post('/sot/validate/:PRODID', controllers.ProductController.validateTokenExt); // { token }
-server.get('/sot/product/:PRODID/discover', controllers.ProductController.discoverThings);
+server.post('/sot/product/:PRODID/discover', controllers.ProductController.discoverThings);
 server.get('/sot/requestacc/:THINGTOKEN', controllers.ThingController.requestAccess);
 
 server.post('/sot/user/:USERID/thing/register', controllers.ThingController.registerThing);
@@ -87,6 +87,11 @@ server.del('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME', controllers.Pr
 
 server.get('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME/acc', controllers.PropertyController.getPropertyValue);
 server.put('/sot/user/:USERID/thing/:THINGID/property/:PROPNAME/ctl', controllers.PropertyController.setPropertyValue);
+
+//server.on('uncaughtException', function (req, res, route, err) {
+//    console.log('uncaughtException', err.stack);
+//});
+
 
 server.listen(4242, function () {
   console.log('%s listening at %s', server.name, server.url);

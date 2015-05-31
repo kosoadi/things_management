@@ -5,12 +5,12 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var Product = require('./Product');
+var uuid = require('node-uuid');
 //var autoIncrement = require('mongoose-auto-increment');
 //var connection = mongoose.createConnection('mongodb://localhost/mydb');
 //autoIncrement.initialize(connection);
 
 var thingSchema = new Schema({
-	_id: {type:String, default:mongoose.Types.ObjectId().toString(), unique:true},
 	_owner: {type: Schema.Types.ObjectId, ref:'User', required: true},
 	_product: {type: Schema.Types.ObjectId, ref:'Product', required: true},
 	name: {type: String, required: true},
@@ -23,7 +23,7 @@ var thingSchema = new Schema({
 	properties: [{type: Schema.Types.ObjectId, ref: 'Property'}]
 });
 
-thingSchema.index({_owner: 1, token:1, name:1}, {unique: true});
+thingSchema.index({token:1,_owner: 1, name:1}, {unique: true, sparse:true});
 
 thingSchema.methods.validateTypeCategory = function (productId, next){
 	Thing
